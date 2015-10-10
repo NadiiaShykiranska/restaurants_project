@@ -1,6 +1,6 @@
-package dao;
+package javapackage.dao;
 
-import models.RestaurantReview;
+import javapackage.models.RestaurantReview;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
