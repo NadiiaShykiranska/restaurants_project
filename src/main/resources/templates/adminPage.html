@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <title>Restaurant Revisor Admin</title>
+</head>
+<body>
+<div id="admin_main">
+    <div>Restaurant Revisor Admin</div>
+    <div id = "add_new_review">
+        <p><button id = "add_new_button" class="restaurant_name_button" onclick="addNewReview(this)">Add new Review</button></p>
+    </div>
+    <div id = "admin_restaurants_list">
+        <div><p>Edit existing Reviews</p></div>
+    </div>
+</div>
+<div id="edit_form">
+    <div id="buttons">
+        <button id="cancel_review_button" onclick = "hideForm()">Cancel</button>
+        <button id="save_review_button" onclick = "hideForm()">Save</button>
+    </div>
+</div>
+    <script th:inline="javascript">
+        var reviews_list = [[${reviews}]];
+        $(document).ready(function() {
+            var index = 0;
+            while (index != reviews_list.length){
+                addButton(reviews_list[index]);
+                index++;
+            }
+        });
+        $("#edit_form").hide();
+
+        function addButton(reviewObject){
+            $("#admin_restaurants_list").append("<div> \
+            <button class='+"restaurant_name_button"+' onclick='+"openReviewDetailsPage(this)"+'>" + reviewObject.name + "</button></div>");
+        }
+
+        function openReviewDetailsPage(Object){
+            $("#admin_main").hide();
+            $("#edit_form").show();
+        }
+
+        function addNewReview(Object){
+            $("#admin_main").hide();
+            $("#edit_form").show();
+        }
+
+        function hideForm(){
+            $("#edit_form").hide();
+            $("#admin_main").show();
+        }
+    </script>
+
+</body>
+</html>

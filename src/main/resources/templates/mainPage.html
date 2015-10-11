@@ -6,31 +6,44 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <title></title>
+    <title>Restaurant Revisor</title>
 </head>
 <body>
-<div id="logo">Restaurant Revisor</div>
-<div id="map"></div>
-<div id="restaurants_list">
+    <div id = "main_page">
+        <div id="logo">Restaurant Revisor</div>
+        <div id="map"></div>
+        <div id="restaurants_list"></div>
     </div>
-<script th:inline="javascript">
-    var reviews_list = [[${reviews}]];
-    $(document).ready(function() {
-        var index = 0;
-        while (index != reviews_list.length){
-            addButton(reviews_list[index]);
-            index++;
+    <div id = "review_details">
+        <div id="back">
+            <button id="back_button" onclick = "backToMainPage()">Back</button>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        var reviews_list = [[${reviews}]];
+        $(document).ready(function() {
+            var index = 0;
+            while (index != reviews_list.length){
+                addButton(reviews_list[index]);
+                index++;
+            }
+        });
+        $("#review_details").hide();
+
+        function addButton(reviewObject){
+            $("#restaurants_list").append("<div> \
+            <button class='+"restaurant_name_button"+' onclick='+"openReviewDetailsPage(this)"+'>" + reviewObject.name + "</button></div>")
         }
-    });
 
-    function addButton(reviewObject){
-        $("#restaurants_list").append("<div> \
-        <button class='+"restaurant_name_button"+' onclick='+"openReviewDetailsPage(this)"+'>" + reviewObject.name + "</button></div>")
-    }
+        function openReviewDetailsPage(Object){
+            $("#review_details").show();
+            $("#main_page").hide();
+        }
 
-    function openReviewDetailsPage(Object){
-        alert("Review Details");
-    }
+        function backToMainPage(){
+            $("#review_details").hide();
+            $("#main_page").show();
+        }
 
 </script>
 
