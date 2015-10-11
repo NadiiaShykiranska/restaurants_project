@@ -2,9 +2,37 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <title></title>
 </head>
 <body>
+<div id="logo">Restaurant Revisor</div>
+<div id="map"></div>
+<div id="restaurants_list">
+    </div>
+<script th:inline="javascript">
+    var reviews_list = [[${reviews}]];
+    $(document).ready(function() {
+        var index = 0;
+        while (index != reviews_list.length){
+            addButton(reviews_list[index]);
+            index++;
+        }
+    });
+
+    function addButton(reviewObject){
+        $("#restaurants_list").append("<div> \
+        <button class='+"restaurant_name_button"+' onclick='+"openReviewDetailsPage(this)"+'>" + reviewObject.name + "</button></div>")
+    }
+
+    function openReviewDetailsPage(Object){
+        alert("Review Details");
+    }
+
+</script>
 
 </body>
 </html>

@@ -9,4 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface RestaurantReviewDao extends CrudRepository<RestaurantReview,Long>{
+    public RestaurantReview findByName(String name);
 }

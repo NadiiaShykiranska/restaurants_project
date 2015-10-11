@@ -2,18 +2,27 @@ package javapackage.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Calendar;
 
-/**
- * Created by Nadiia on 10.10.2015.
- */
 @Entity
 @Table(name = "restaurants")
 public class RestaurantReview {
 
+    public RestaurantReview(Integer id, String name, String location, String review, Short cuisine, Short interior, Short service, Double rating){
+        this.id=id;
+        this.name = name;
+        this.location = location;
+        this.review = review;
+        this.cuisine = cuisine;
+        this.interior = interior;
+        this.service = service;
+        this.rating = rating;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
-    private long id;
+    private int id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -28,6 +37,10 @@ public class RestaurantReview {
     private short service;
 
     @NotNull
+    @Column(name = "rating", nullable = false)
+    private double rating;
+
+    @NotNull
     @Column(name = "interior", nullable = false)
     private short interior;
 
@@ -38,7 +51,7 @@ public class RestaurantReview {
     @Column(name = "location", nullable = true)
     private String location;
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -66,6 +79,9 @@ public class RestaurantReview {
         this.location = location;
     }
 
+    public void setRating(double rating) {
+        this.rating = rating;}
+
     public long getId() {
 
         return id;
@@ -86,6 +102,9 @@ public class RestaurantReview {
     public short getInterior() {
         return interior;
     }
+
+    public double getRating() {
+        return rating;}
 
     public String getReview() {
         return review;
