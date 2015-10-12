@@ -68,6 +68,20 @@ public class DBHelper {
         }
     }
 
+    public List<RestaurantReview> getMatches(String pattern){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        List result = session.createSQLQuery(
+                "select * from restaurants where name regexp :pattern")
+                .setString("pattern", pattern).list();
+        List<RestaurantReview> listReviews = parseResults(result);
+        session.getTransaction().commit();
+        if (session.isOpen()) {
+            session.close();
+        }
+        return listReviews;
+    }
+
     private List<RestaurantReview> parseResults(List<Object> results){
         List<RestaurantReview> listReviews = new LinkedList<>();
         for (Object object: results) {

@@ -3,7 +3,6 @@ package javapackage.controllers;
 import javapackage.dao.RestaurantReviewDao;
 import javapackage.helpers.DBHelper;
 import javapackage.models.RestaurantReview;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +36,11 @@ public class MainController {
     @RequestMapping(value = "/getReview", method = RequestMethod.GET)
     @ResponseBody RestaurantReview getRestaurantReview(@RequestParam String restaurantName) {
         return dbHelper.selectRestaurantReview(restaurantName);
+    }
+
+    @RequestMapping(value = "/getMatches", method = RequestMethod.GET)
+    @ResponseBody List<RestaurantReview> getMatches(@RequestParam String pattern) {
+        return dbHelper.getMatches(pattern);
     }
 
 }

@@ -12,6 +12,10 @@
     <div id = "main_page">
         <div id="logo">Restaurant Revisor</div>
         <div id="map"></div>
+        <div id = "search">
+            <input id = "search_field" type = "text" placeholder = "search"/>
+            <button id = "search_button" onclick = "clickSearch()">Search</button>
+        </div>
         <div id="restaurants_list"></div>
     </div>
     <div id = "review_details">
@@ -91,7 +95,39 @@
             $("#main_page").show();
         }
 
-</script>
+        function clickSearch(){
+            var pattern = $("#search_field").val();
+            if(pattern.length!=0){
+                $.ajax({
+                    url : 'getMatches',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    data : ({
+                        pattern : pattern
+                    }),
+                    success: function (reviews){
+                        if(reviews.length!=0){
+                            $(".restaurant_name_button").remove();
+                            $(document).ready(function() {
+                                var index = 0;
+                                while (index != reviews.length){
+                                    addButton(reviews[index]);
+                                    index++;
+                                }
+                            });
+                        }else{
+                            alert("Nothing was found. Try different search options");
+                        }
+                    }
+                });
+            }else{
+                alert("Set your request");
+            }
+        }
+
+    </script>
 
 </body>
 </html>
