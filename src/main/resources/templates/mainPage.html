@@ -10,13 +10,25 @@
 </head>
 <body>
     <div id = "main_page">
-        <div id="logo">Restaurant Revisor</div>
-        <div id="map"></div>
+        <div id = "logo">Restaurant Revisor</div>
+        <div id = "map"></div>
         <div id = "search">
             <input id = "search_field" type = "text" placeholder = "search"/>
             <button id = "search_button" onclick = "clickSearch()">Search</button>
         </div>
-        <div id="restaurants_list"></div>
+        <div id = "sorting">Sorted by:
+            <select id = "selector" onchange="changeSelector()">
+                <option class = "selector_option">rating</option>
+                <option class = "selector_option">cuisine</option>
+                <option class = "selector_option">interior</option>
+                <option class = "selector_option">service</option>
+                <option class = "selector_option">name</option>
+            </select>
+        </div>
+        <div id = "restaurants_list"></div>
+        <div id = "show_all">
+            <button id="show_all_button" onclick = "clickShowAll()">ShowAll</button>
+        </div>
     </div>
     <div id = "review_details">
         <div id = "review_details_all_info">
@@ -59,6 +71,7 @@
                 index++;
             }
             $("#review_details").hide();
+            $("#show_all").hide()
         });
 
 
@@ -109,6 +122,8 @@
                     }),
                     success: function (reviews){
                         if(reviews.length!=0){
+                            $("#sorting").hide();
+                            $("#show_all").show();
                             $(".restaurant_name_button").remove();
                             $(document).ready(function() {
                                 var index = 0;
@@ -127,6 +142,55 @@
             }
         }
 
+        function clickShowAll(){
+            $("#search_field").val("");
+            $(".restaurant_name_button").remove();
+            $("#sorting").show();
+            $("#show_all").hide();
+            $.ajax({
+                url : 'getSorted',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                data : ({
+                    sortingValue : "rating"
+                }),
+                success: function (reviews){
+                    $(document).ready(function() {
+                        var index = 0;
+                        while (index != reviews.length){
+                            addButton(reviews[index]);
+                            index++;
+                        }
+                    });
+                }
+            });
+        }
+
+        function changeSelector(){
+            $(".restaurant_name_button").remove();
+            var selectedText = $("#selector option:selected").text();
+            $.ajax({
+                url : 'getSorted',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                data : ({
+                    sortingValue : selectedText
+                }),
+                success: function (reviews){
+                    $(document).ready(function() {
+                        var index = 0;
+                        while (index != reviews.length){
+                            addButton(reviews[index]);
+                            index++;
+                        }
+                    });
+                }
+            });
+        }
     </script>
 
 </body>

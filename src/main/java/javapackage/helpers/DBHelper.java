@@ -15,19 +15,14 @@ import java.util.Objects;
 public class DBHelper {
     public static final String NAME = "name";
     public static final String RATING = "rating";
-    public static final String CUISINE = "cuisine";
-    public static final String INTERIOR = "interior";
-    public static final String SERVICE = "service";
     public static final String DESC = "desc";
 
-    public List<RestaurantReview> selectOrderedReviews(String columnName, Boolean isDesc){
+    public List<RestaurantReview> selectOrderedReviews(String column, Boolean isDesc){
         String desc = isDesc?DESC:"";
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List result = session.createSQLQuery(
-                "select * from restaurants order by :columnName :desc")
-                .setString("columnName", columnName)
-                .setString("desc", desc).list();
+                "select * from restaurants order by "+column+" "+desc).list();
         List<RestaurantReview> listReviews = parseResults(result);
         session.getTransaction().commit();
         if (session.isOpen()) {

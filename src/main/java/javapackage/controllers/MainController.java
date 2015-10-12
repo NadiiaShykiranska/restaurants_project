@@ -43,4 +43,9 @@ public class MainController {
         return dbHelper.getMatches(pattern);
     }
 
+    @RequestMapping(value = "/getSorted", method = RequestMethod.GET)
+    @ResponseBody List<RestaurantReview> getSorted(@RequestParam String sortingValue) {
+        return dbHelper.selectOrderedReviews(sortingValue, true);
+    }
+
 }
