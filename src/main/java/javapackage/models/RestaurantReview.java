@@ -8,7 +8,7 @@ import java.util.Calendar;
 @Table(name = "restaurants")
 public class RestaurantReview {
 
-    public RestaurantReview(Integer id, String name, String location, String review, Short cuisine, Short interior, Short service, Double rating){
+    public RestaurantReview(Integer id, String name, String location, String review, byte cuisine, byte interior, byte service, Double rating){
         this.id=id;
         this.name = name;
         this.location = location;
@@ -28,28 +28,28 @@ public class RestaurantReview {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
-    @Column(name = "cuisine", nullable = false)
-    private short cuisine;
-
-    @NotNull
-    @Column(name = "service", nullable = false)
-    private short service;
-
-    @NotNull
-    @Column(name = "rating", nullable = false)
-    private double rating;
-
-    @NotNull
-    @Column(name = "interior", nullable = false)
-    private short interior;
+    @Column(name = "location", nullable = true)
+    private String location;
 
     @NotNull
     @Column(name = "review", nullable = false)
     private String review;
 
-    @Column(name = "location", nullable = true)
-    private String location;
+    @NotNull
+    @Column(name = "cuisine", nullable = false)
+    private byte cuisine;
+
+    @NotNull
+    @Column(name = "interior", nullable = false)
+    private byte interior;
+
+    @NotNull
+    @Column(name = "service", nullable = false)
+    private byte service;
+
+    @NotNull
+    @Column(name = "rating", nullable = false)
+    private double rating;
 
     public void setId(int id) {
         this.id = id;
@@ -59,15 +59,15 @@ public class RestaurantReview {
         this.name = name;
     }
 
-    public void setCuisine(short cuisine) {
+    public void setCuisine(byte cuisine) {
         this.cuisine = cuisine;
     }
 
-    public void setService(short service) {
+    public void setService(byte service) {
         this.service = service;
     }
 
-    public void setInterior(short interior) {
+    public void setInterior(byte interior) {
         this.interior = interior;
     }
 
@@ -80,10 +80,10 @@ public class RestaurantReview {
     }
 
     public void setRating(double rating) {
-        this.rating = rating;}
+        this.rating = rating;
+    }
 
     public long getId() {
-
         return id;
     }
 
@@ -104,7 +104,8 @@ public class RestaurantReview {
     }
 
     public double getRating() {
-        return rating;}
+        return rating;
+    }
 
     public String getReview() {
         return review;
