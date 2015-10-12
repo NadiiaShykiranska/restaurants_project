@@ -15,10 +15,37 @@
         <div id="restaurants_list"></div>
     </div>
     <div id = "review_details">
+        <div id = "review_details_all_info">
+            <div id="review_details_name">
+                <label>Restaurant Name:</label>
+                <label id = "restaurant_name"></label>
+            </div>
+            <div id="review_details_location">
+                <label> Location:</label>
+                <label id = "restaurant_location"></label>
+            </div>
+            <div id="review_details_cuisine">
+                <label> Cuisine:</label>
+                <label id = "restaurant_cuisine"></label>
+            </div>
+            <div id="review_details_interior">
+                <label> Interior:</label>
+                <label id = "restaurant_interior"></label>
+            </div>
+            <div id="review_details_service">
+                <label> Service:</label>
+                <label id = "restaurant_service"></label>
+            </div>
+            <div id="review_details_review">
+                <label> Review:</label>
+                <label id = "restaurant_review"></label>
+            </div>
+        </div>
         <div id="back">
             <button id="back_button" onclick = "backToMainPage()">Back</button>
         </div>
     </div>
+
     <script th:inline="javascript">
         var reviews_list = [[${reviews}]];
         $(document).ready(function() {
@@ -27,8 +54,9 @@
                 addButton(reviews_list[index]);
                 index++;
             }
+            $("#review_details").hide();
         });
-        $("#review_details").hide();
+
 
         function addButton(reviewObject){
             $("#restaurants_list").append("<div> \
@@ -36,8 +64,26 @@
         }
 
         function openReviewDetailsPage(Object){
-            $("#review_details").show();
-            $("#main_page").hide();
+            $.ajax({
+                url : 'showReview',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                data : ({
+                    restaurantName : Object.innerText
+                }),
+                success: function (reviewDetails) {
+                    $("#restaurant_name").text(reviewDetails.name);
+                    $("#restaurant_location").text(reviewDetails.location);
+                    $("#restaurant_cuisine").text(reviewDetails.cuisine);
+                    $("#restaurant_interior").text(reviewDetails.interior);
+                    $("#restaurant_service").text(reviewDetails.service);
+                    $("#restaurant_review").text(reviewDetails.review);
+                    $("#review_details").show();
+                    $("#main_page").hide();
+                }
+            });
         }
 
         function backToMainPage(){

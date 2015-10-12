@@ -46,7 +46,7 @@ public class DBHelper {
         RestaurantReview reviewDetails;
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        String sql = "select * from restaurants where name = "+restaurantName;
+        String sql = "select * from restaurants where name = '"+restaurantName+"'";
         Object[] o = (Object[])session.createSQLQuery(sql).list().get(0);
             reviewDetails= new RestaurantReview(
                     Integer.parseInt(o[0].toString()),

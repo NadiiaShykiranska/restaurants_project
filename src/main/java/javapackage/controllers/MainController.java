@@ -34,4 +34,9 @@ public class MainController {
         return "adminPage";
     }
 
+    @RequestMapping(value = "/showReview", method = RequestMethod.GET)
+    @ResponseBody RestaurantReview getRestaurantReview(@RequestParam String restaurantName) {
+        return dbHelper.selectRestaurantReview(restaurantName);
+    }
+
 }
