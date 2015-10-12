@@ -12,14 +12,40 @@
 <div id="admin_main">
     <div>Restaurant Revisor Admin</div>
     <div id = "add_new_review">
-        <p><button id = "add_new_button" class="restaurant_name_button" onclick="addNewReview(this)">Add new Review</button></p>
+        <p><button id = "add_new_button" class="restaurant_name_button" onclick="addNewReview()">Add new Review</button></p>
     </div>
     <div id = "admin_restaurants_list">
         <div><p>Edit existing Reviews</p></div>
     </div>
 </div>
-<div id="edit_form">
-    <div id="buttons">
+<div id="admin_edit_form">
+    <div id = "review_details_editable">
+        <div id="admin_review_details_name">
+            <label>Restaurant Name:</label>
+            <input type = "text" class="admin_edit_field" id = "admin_restaurant_name"/>
+        </div>
+        <div id="admin_review_details_location">
+            <label> Location:</label>
+            <input type = "text" class="admin_edit_field" id = "admin_restaurant_location"/>
+        </div>
+        <div id="admin_review_details_cuisine">
+            <label> Cuisine:</label>
+            <input type = "text" class="admin_edit_field" id = "admin_restaurant_cuisine"/>
+        </div>
+        <div id="admin_review_details_interior">
+            <label> Interior:</label>
+            <input type = "text" class="admin_edit_field" id = "admin_restaurant_interior"/>
+        </div>
+        <div id="admin_review_details_service">
+            <label> Service:</label>
+            <input type = "text" class="admin_edit_field" id = "admin_restaurant_service"/>
+        </div>
+        <div id="admin_review_details_review">
+            <label> Review:</label>
+            <input type = "text" class="admin_edit_field" id = "admin_restaurant_review"/>
+        </div>
+    </div>
+    <div id="admin_buttons">
         <button id="cancel_review_button" onclick = "hideForm()">Cancel</button>
         <button id="save_review_button" onclick = "hideForm()">Save</button>
     </div>
@@ -33,7 +59,7 @@
                 index++;
             }
         });
-        $("#edit_form").hide();
+        $("#admin_edit_form").hide();
 
         function addButton(reviewObject){
             $("#admin_restaurants_list").append("<div> \
@@ -41,18 +67,36 @@
         }
 
         function openReviewDetailsPage(Object){
-            $("#admin_main").hide();
-            $("#edit_form").show();
+        $.ajax({
+                url : 'showReview',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                data : ({
+                    restaurantName : Object.innerText
+                }),
+                success: function (reviewDetails) {
+                    $("#admin_restaurant_name").val(reviewDetails.name);
+                    $("#admin_restaurant_location").val(reviewDetails.location);
+                    $("#admin_restaurant_cuisine").val(reviewDetails.cuisine);
+                    $("#admin_restaurant_interior").val(reviewDetails.interior);
+                    $("#admin_restaurant_service").val(reviewDetails.service);
+                    $("#admin_restaurant_review").val(reviewDetails.review);
+                    $("#admin_edit_form").show();
+                    $("#admin_main").hide();
+                }
+            });
         }
 
-        function addNewReview(Object){
+        function addNewReview(){
+            $(".admin_edit_field").val("");
+            $("#admin_edit_form").show();
             $("#admin_main").hide();
-            $("#edit_form").show();
-            location.reload();
         }
 
         function hideForm(){
-            $("#edit_form").hide();
+            $("#admin_edit_form").hide();
             $("#admin_main").show();
         }
     </script>
