@@ -24,13 +24,13 @@ public class MainController {
 
     @RequestMapping(value="/")
     public String displayRestaurantsOrderedByRating(Model model) {
-        model.addAttribute("reviews",dbHelper.selectOrderedReviews(DBHelper.RATING, DBHelper.DESC));
+        model.addAttribute("reviews",dbHelper.selectOrderedReviews(DBHelper.RATING, true));
         return "mainPage";
     }
 
     @RequestMapping(value="/admin")
     public String displayRestaurantsReview(Model model) {
-        model.addAttribute("reviews",dbHelper.selectOrderedReviews(DBHelper.NAME));
+        model.addAttribute("reviews",dbHelper.selectOrderedReviews(DBHelper.NAME, false));
         return "adminPage";
     }
 

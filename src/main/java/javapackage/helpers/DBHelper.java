@@ -17,14 +17,11 @@ public class DBHelper {
     public static final String SERVICE = "service";
     public static final String DESC = " desc";
 
-    public List<RestaurantReview> selectOrderedReviews(String columnName){
-        return selectOrderedReviews(columnName, "");
-    }
-
-    public List<RestaurantReview> selectOrderedReviews(String columnName, String desc){
+    public List<RestaurantReview> selectOrderedReviews(String columnName, Boolean isDesc){
         List<RestaurantReview> listReviews = new LinkedList<>();
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
+        String desc = isDesc?DESC:"";
         String sql = "select * from restaurants order by "+columnName+desc;
         for (Object result  : session.createSQLQuery(sql).list()) {
             Object[] o = (Object[]) result;
