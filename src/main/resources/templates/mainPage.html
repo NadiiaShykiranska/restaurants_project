@@ -42,7 +42,7 @@
             </div>
         </div>
         <div id="back">
-            <button id="back_button" onclick = "backToMainPage()">Back</button>
+            <button id="back_button" onclick = "clickBack()">Back</button>
         </div>
     </div>
 
@@ -60,12 +60,12 @@
 
         function addButton(reviewObject){
             $("#restaurants_list").append("<div> \
-            <button class='+"restaurant_name_button"+' onclick='+"openReviewDetailsPage(this)"+'>" + reviewObject.name + "</button></div>")
+            <button class='+"restaurant_name_button"+' onclick='+"clickOnRestaurantButton(this)"+'>" + reviewObject.name + "</button></div>")
         }
 
-        function openReviewDetailsPage(Object){
+        function clickOnRestaurantButton(Object){
             $.ajax({
-                url : 'showReview',
+                url : 'getReview',
                 type: 'GET',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -86,7 +86,7 @@
             });
         }
 
-        function backToMainPage(){
+        function clickBack(){
             $("#review_details").hide();
             $("#main_page").show();
         }

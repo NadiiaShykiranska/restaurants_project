@@ -12,14 +12,16 @@
 <div id="admin_main">
     <div>Restaurant Revisor Admin</div>
     <div id = "add_new_review">
-        <p><button id = "add_new_button" class="restaurant_name_button" onclick="addNewReview()">Add new Review</button></p>
+        <p><button id = "add_new_button" class="restaurant_name_button" onclick="clickAddNewReview()">Add new Review</button></p>
     </div>
     <div id = "admin_restaurants_list">
         <div><p>Edit existing Reviews</p></div>
     </div>
 </div>
 <div id="admin_edit_form">
-    <div id = "admin_editable">Edit review</div>
+    <div id = "admin_editable">Edit review:
+        <label id = "admin_editable_restaurant_name" class="admin_edit_field"></label>
+    </div>
     <div id = "admin_new">Create new review</div>
     <div id = "review_details">
         <p></p>
@@ -49,8 +51,8 @@
         </div>
     </div>
     <div id="admin_buttons">
-        <button id="cancel_review_button" onclick = "hideReviewDetailsForm()">Cancel</button>
-        <button id="save_review_button" onclick = "saveReview()">Save</button>
+        <button id="cancel_review_button" onclick = "clickCancel()">Cancel</button>
+        <button id="save_review_button" onclick = "clickSave()">Save</button>
     </div>
 </div>
     <script th:inline="javascript">
@@ -66,12 +68,12 @@
 
         function addButton(reviewObject){
             $("#admin_restaurants_list").append("<div> \
-            <button class='+"restaurant_name_button"+' onclick='+"openEditReviewPage(this)"+'>" + reviewObject.name + "</button></div>");
+            <button class='+"restaurant_name_button"+' onclick='+"clickOnRestaurantButton(this)"+'>" + reviewObject.name + "</button></div>");
         }
 
-        function openEditReviewPage(Object){
+        function clickOnRestaurantButton(Object){
         $.ajax({
-                url : 'showReview',
+                url : 'getReview',
                 type: 'GET',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -80,6 +82,7 @@
                     restaurantName : Object.innerText
                 }),
                 success: function (reviewDetails) {
+                    $("#admin_editable_restaurant_name").text(reviewDetails.name);
                     $("#admin_restaurant_name").val(reviewDetails.name);
                     $("#admin_restaurant_location").val(reviewDetails.location);
                     $("#admin_restaurant_cuisine").val(reviewDetails.cuisine);
@@ -94,7 +97,7 @@
             });
         }
 
-        function addNewReview(){
+        function clickAddNewReview(){
             $(".admin_edit_field").val("");
             $("#admin_edit_form").show();
             $("#admin_editable").hide();
@@ -102,12 +105,12 @@
             $("#admin_main").hide();
         }
 
-        function hideReviewDetailsForm(){
+        function clickCancel(){
             $("#admin_edit_form").hide();
             $("#admin_main").show();
         }
 
-        function saveReview(){
+        function clickSave(){
             $("#admin_edit_form").hide();
             $("#admin_main").show();
         }

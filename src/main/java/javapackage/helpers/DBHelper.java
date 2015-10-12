@@ -50,15 +50,17 @@ public class DBHelper {
         return restaurantReview;
     }
 
-    public void updateReview(RestaurantReview restaurantReview){
+    public void updateReview(String oldName, RestaurantReview restaurantReview){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
-                "update restaurants SET cuisine = :cuisine, interior = :interior, service = :service, review = :review,  rating= :cuisine*0.4+:interior*0.3+:service*0.3 where name = :name")
+                "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review,  rating= :cuisine*0.4+:interior*0.3+:service*0.3 where name = :oldName")
+                .setString("oldName",oldName)
                 .setString("cuisine", String.valueOf(restaurantReview.getCuisine()))
                 .setString("interior", String.valueOf(restaurantReview.getService()))
                 .setString("service", String.valueOf(restaurantReview.getInterior()))
                 .setString("review", restaurantReview.getReview())
+                .setString("location", restaurantReview.getLocation())
                 .setString("name", restaurantReview.getName());
         session.getTransaction().commit();
         if (session.isOpen()) {
