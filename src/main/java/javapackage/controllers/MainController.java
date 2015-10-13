@@ -3,6 +3,9 @@ package javapackage.controllers;
 import javapackage.dao.RestaurantReviewDao;
 import javapackage.helpers.DBHelper;
 import javapackage.models.RestaurantReview;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,4 +51,31 @@ public class MainController {
         return dbHelper.selectOrderedReviews(sortingValue, true);
     }
 
+    @RequestMapping(value = "/addNewReview", method = RequestMethod.GET)
+    @ResponseBody void addNewReview(@RequestParam String data) throws JSONException{
+        JSONArray jsonArray = new JSONArray(data);
+        JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+        RestaurantReview restaurantReview = new RestaurantReview(
+                jsonObject.get("name").toString(),
+                jsonObject.get("location").toString(),
+                jsonObject.get("review").toString(),
+                Byte.valueOf(jsonObject.get("cuisine").toString()),
+                Byte.valueOf(jsonObject.get("interior").toString()),
+                Byte.valueOf(jsonObject.get("service").toString()));
+        dbHelper.addNewReview(restaurantReview);
+    }
+
+    @RequestMapping(value = "/editReview", method = RequestMethod.GET)
+    @ResponseBody void editReview(@RequestParam String oldRestaurantName, @RequestParam String data) throws JSONException {
+        JSONArray jsonArray = new JSONArray(data);
+        JSONObject jsonObject = (JSONObject) jsonArray.get(0);
+        RestaurantReview restaurantReview = new RestaurantReview(
+                jsonObject.get("name").toString(),
+                jsonObject.get("location").toString(),
+                jsonObject.get("review").toString(),
+                Byte.valueOf(jsonObject.get("cuisine").toString()),
+                Byte.valueOf(jsonObject.get("interior").toString()),
+                Byte.valueOf(jsonObject.get("service").toString()));
+        dbHelper.updateReview(oldRestaurantName, restaurantReview);
+    }
 }

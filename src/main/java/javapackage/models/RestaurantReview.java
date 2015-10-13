@@ -8,6 +8,9 @@ import java.util.Calendar;
 @Table(name = "restaurants")
 public class RestaurantReview {
 
+    public RestaurantReview(){
+    }
+
     public RestaurantReview(Integer id, String name, String location, String review, byte cuisine, byte interior, byte service, Double rating){
         this.id=id;
         this.name = name;
@@ -17,6 +20,15 @@ public class RestaurantReview {
         this.interior = interior;
         this.service = service;
         this.rating = rating;
+    }
+
+    public RestaurantReview(String name, String location, String review, byte cuisine, byte interior, byte service){
+        this.name = name;
+        this.location = location;
+        this.review = review;
+        this.cuisine = cuisine;
+        this.interior = interior;
+        this.service = service;
     }
 
     @Id

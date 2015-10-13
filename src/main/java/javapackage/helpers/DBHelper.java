@@ -77,6 +77,24 @@ public class DBHelper {
         return listReviews;
     }
 
+    public void addNewReview(RestaurantReview restaurantReview){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.createSQLQuery(
+                "insert into restaurants values(:id, :name, :location, :review, :cuisine, :interior, :service, :cuisine*0.4+:interior*0.3+:service*0.3)")
+                .setString("id", "null")
+                .setString("cuisine", String.valueOf(restaurantReview.getCuisine()))
+                .setString("interior", String.valueOf(restaurantReview.getService()))
+                .setString("service", String.valueOf(restaurantReview.getInterior()))
+                .setString("review", restaurantReview.getReview())
+                .setString("location", restaurantReview.getLocation())
+                .setString("name", restaurantReview.getName());
+        session.getTransaction().commit();
+        if (session.isOpen()) {
+            session.close();
+        }
+    }
+
     private List<RestaurantReview> parseResults(List<Object> results){
         List<RestaurantReview> listReviews = new LinkedList<>();
         for (Object object: results) {

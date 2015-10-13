@@ -34,22 +34,34 @@
             <input type = "text" class="admin_edit_field" id = "admin_restaurant_location"/>
         </div>
         <div id="admin_review_details_cuisine">
-            <label> Cuisine:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_cuisine"/>
+            <label>Cuisine:</label>
+            <label>1<input type = "radio" name = "cuisine" class = "review_details_radio" value = "1"/></label>
+            <label>2<input type = "radio" name = "cuisine" class = "review_details_radio" value = "2"/></label>
+            <label>3<input type = "radio" name = "cuisine" class = "review_details_radio" value = "3"/></label>
+            <label>4<input type = "radio" name = "cuisine" class = "review_details_radio" value = "4"/></label>
+            <label>5<input type = "radio" name = "cuisine" class = "review_details_radio" value = "5"/></label>
+        </div>
         </div>
         <div id="admin_review_details_interior">
             <label> Interior:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_interior"/>
+            <label>1<input type = "radio" name = "interior" class = "review_details_radio" value = "1"/></label>
+            <label>2<input type = "radio" name = "interior" class = "review_details_radio" value = "2"/></label>
+            <label>3<input type = "radio" name = "interior" class = "review_details_radio" value = "3"/></label>
+            <label>4<input type = "radio" name = "interior" class = "review_details_radio" value = "4"/></label>
+            <label>5<input type = "radio" name = "interior" class = "review_details_radio" value = "5"/></label>
         </div>
         <div id="admin_review_details_service">
             <label> Service:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_service"/>
+            <label>1<input type = "radio" name = "service" class = "review_details_radio" value = "1"/></label>
+            <label>2<input type = "radio" name = "service" class = "review_details_radio" value = "2"/></label>
+            <label>3<input type = "radio" name = "service" class = "review_details_radio" value = "3"/></label>
+            <label>4<input type = "radio" name = "service" class = "review_details_radio" value = "4"/></label>
+            <label>5<input type = "radio" name = "service" class = "review_details_radio" value = "5"/></label>
         </div>
         <div id="admin_review_details_review">
             <label> Review:</label>
             <input type = "text" class="admin_edit_field" id = "admin_restaurant_review"/>
         </div>
-    </div>
     <div id="admin_buttons">
         <button id="cancel_review_button" onclick = "clickCancel()">Cancel</button>
         <button id="save_review_button" onclick = "clickSave()">Save</button>
@@ -85,9 +97,9 @@
                     $("#admin_editable_restaurant_name").text(reviewDetails.name);
                     $("#admin_restaurant_name").val(reviewDetails.name);
                     $("#admin_restaurant_location").val(reviewDetails.location);
-                    $("#admin_restaurant_cuisine").val(reviewDetails.cuisine);
-                    $("#admin_restaurant_interior").val(reviewDetails.interior);
-                    $("#admin_restaurant_service").val(reviewDetails.service);
+                    $("input[name=cuisine][value='"+reviewDetails.cuisine+"']").prop('checked', true); ;
+                    $("input[name=interior][value='"+reviewDetails.interior+"']").prop('checked', true); ;
+                    $("input[name=service][value='"+reviewDetails.service+"']").prop('checked', true); ;
                     $("#admin_restaurant_review").val(reviewDetails.review);
                     $("#admin_edit_form").show();
                     $("#admin_editable").show();
@@ -99,6 +111,7 @@
 
         function clickAddNewReview(){
             $(".admin_edit_field").val("");
+            $(".review_details_radio").prop('checked', false);
             $("#admin_edit_form").show();
             $("#admin_editable").hide();
             $("#admin_new").show();
