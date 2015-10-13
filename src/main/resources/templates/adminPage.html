@@ -6,13 +6,13 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <title>Restaurant Revisor Admin</title>
+    <title>Restaurant Expert Admin</title>
 </head>
 <body>
 <div id="admin_main">
-    <div>Restaurant Revisor Admin</div>
+    <div>Restaurant Expert Admin</div>
     <div id = "add_new_review">
-        <p><button id = "add_new_button" class="restaurant_name_button" onclick="clickAddNewReview()">Add new Review</button></p>
+        <p><button id = "add_new_button" onclick="clickAddNewReview()">Add new Review</button></p>
     </div>
     <div id = "admin_restaurants_list">
         <div><p>Edit existing Reviews</p></div>
@@ -30,7 +30,7 @@
             <input type = "text" class="admin_edit_field" id = "admin_restaurant_name"/>
         </div>
         <div id="admin_review_details_location">
-            <label> Location:</label>
+            <label>Location:</label>
             <input type = "text" class="admin_edit_field" id = "admin_restaurant_location"/>
         </div>
         <div id="admin_review_details_cuisine">
@@ -84,7 +84,7 @@
         }
 
         function clickOnRestaurantButton(Object){
-        $.ajax({
+            $.ajax({
                 url : 'getReview',
                 type: 'GET',
                 dataType: 'json',
@@ -124,9 +124,81 @@
         }
 
         function clickSave(){
-            $("#admin_edit_form").hide();
+            if($("#admin_restaurant_name").val()==""){
+                alert("Enter restaurant Name");
+            }else if($("#admin_restaurant_location").val()==""){
+                alert("Enter restaurant Location");
+            }else if($("#admin_restaurant_review").val()==""){
+                alert("Enter restaurant Review");
+            }else if($("input[name=cuisine]:checked").val()==undefined){
+                alert("Check Cuisine Rating");
+            }else if($("input[name=interior]:checked").val()==undefined){
+                alert("Check Interior Rating");
+            }else if($("input[name=service]:checked").val()==undefined){
+                alert("Check Service Rating");
+            }else {
+                var review_array = [];
+                review_array.push({'name': $("#admin_restaurant_name").val(),
+                'location': $("#admin_restaurant_location").val(),
+                'review': $("#admin_restaurant_review").val(),
+                'cuisine': $("input[name=cuisine]:checked").val(),
+                'interior': $("input[name=interior]:checked").val(),
+                'service': $("input[name=service]:checked").val()});
+                saveToDB(review_array);
+                $("#admin_edit_form").hide();
+                showUpdatedRestaurantsList();
+            }
+        }
+
+
+        function saveToDB(review_array){
+            if($("#admin_editable_restaurant_name").is(":hidden")){
+                $.ajax({
+                    url : 'addNewReview',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    data : {data : JSON.stringify(review_array)},
+                });
+            }else{
+                 $.ajax({
+                    url : 'editReview',
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    mimeType: 'application/json',
+                    data : {
+                        oldRestaurantName : $("#admin_editable_restaurant_name").text(),
+                        data : JSON.stringify(review_array)},
+                });
+            }
+        }
+
+        function showUpdatedRestaurantsList(){
+            $(".restaurant_name_button").remove();
+            $.ajax({
+                url : 'getSorted',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                mimeType: 'application/json',
+                data : ({
+                    sortingValue : "rating"
+                }),
+                success: function (reviews){
+                    $(document).ready(function() {
+                        var index = 0;
+                        while (index != reviews.length){
+                            addButton(reviews[index]);
+                            index++;
+                        }
+                    });
+                }
+            });
             $("#admin_main").show();
         }
+
     </script>
 
 </body>

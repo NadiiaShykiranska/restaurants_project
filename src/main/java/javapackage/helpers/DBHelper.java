@@ -45,24 +45,6 @@ public class DBHelper {
         return restaurantReview;
     }
 
-    public void updateReview(String oldName, RestaurantReview restaurantReview){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        session.createSQLQuery(
-                "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review,  rating= :cuisine*0.4+:interior*0.3+:service*0.3 where name = :oldName")
-                .setString("oldName",oldName)
-                .setString("cuisine", String.valueOf(restaurantReview.getCuisine()))
-                .setString("interior", String.valueOf(restaurantReview.getService()))
-                .setString("service", String.valueOf(restaurantReview.getInterior()))
-                .setString("review", restaurantReview.getReview())
-                .setString("location", restaurantReview.getLocation())
-                .setString("name", restaurantReview.getName());
-        session.getTransaction().commit();
-        if (session.isOpen()) {
-            session.close();
-        }
-    }
-
     public List<RestaurantReview> getMatches(String pattern){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
@@ -78,17 +60,36 @@ public class DBHelper {
     }
 
     public void addNewReview(RestaurantReview restaurantReview){
+        String rating = getRating(restaurantReview);
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
-                "insert into restaurants values(:id, :name, :location, :review, :cuisine, :interior, :service, :cuisine*0.4+:interior*0.3+:service*0.3)")
-                .setString("id", "null")
+                "insert into restaurants (name, location, review, cuisine, interior, service, rating) values(:name, :location, :review, :cuisine, :interior, :service, "+rating+")")
                 .setString("cuisine", String.valueOf(restaurantReview.getCuisine()))
                 .setString("interior", String.valueOf(restaurantReview.getService()))
                 .setString("service", String.valueOf(restaurantReview.getInterior()))
                 .setString("review", restaurantReview.getReview())
                 .setString("location", restaurantReview.getLocation())
-                .setString("name", restaurantReview.getName());
+                .setString("name", restaurantReview.getName()).executeUpdate();
+        session.getTransaction().commit();
+        if (session.isOpen()) {
+            session.close();
+        }
+    }
+
+    public void updateReview(String oldName, RestaurantReview restaurantReview){
+        String rating = getRating(restaurantReview);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        session.createSQLQuery(
+                "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review,  rating = "+rating+" where name = :oldName")
+                .setString("oldName", oldName)
+                .setString("cuisine", String.valueOf(restaurantReview.getCuisine()))
+                .setString("interior", String.valueOf(restaurantReview.getService()))
+                .setString("service", String.valueOf(restaurantReview.getInterior()))
+                .setString("review", restaurantReview.getReview())
+                .setString("location", restaurantReview.getLocation())
+                .setString("name", restaurantReview.getName()).executeUpdate();
         session.getTransaction().commit();
         if (session.isOpen()) {
             session.close();
@@ -110,5 +111,9 @@ public class DBHelper {
                     Double.parseDouble(o[7].toString())));
         }
         return listReviews;
+    }
+
+    private String getRating(RestaurantReview restaurantReview){
+        return String.valueOf(restaurantReview.getCuisine() * 0.4 + restaurantReview.getInterior() * 0.3 + restaurantReview.getService() * 0.3);
     }
 }
