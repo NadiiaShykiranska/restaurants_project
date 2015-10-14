@@ -1,11 +1,8 @@
 package javapackage.controllers;
 
-import javapackage.dao.RestaurantReviewDao;
-import javapackage.helpers.DBHelper;
+import javapackage.models.DBModel;
 import javapackage.models.RestaurantReview;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,36 +16,33 @@ import java.util.List;
 @Controller
 public class MainController {
     @Autowired
-    DBHelper dbHelper;
-
-    @Autowired
-    private RestaurantReviewDao restaurantReviewDao;
+    DBModel dbModel;
 
     @RequestMapping(value="/")
     public String displayRestaurantsOrderedByRating(Model model) {
-        model.addAttribute("reviews",dbHelper.selectOrderedReviews(DBHelper.RATING, true));
+        model.addAttribute("reviews",dbModel.selectOrderedReviews(DBModel.RATING, true));
         return "mainPage";
     }
 
     @RequestMapping(value="/admin")
     public String displayRestaurantsReview(Model model) {
-        model.addAttribute("reviews",dbHelper.selectOrderedReviews(DBHelper.NAME, false));
+        model.addAttribute("reviews",dbModel.selectOrderedReviews(DBModel.NAME, false));
         return "adminPage";
     }
 
     @RequestMapping(value = "/getReview", method = RequestMethod.GET)
     @ResponseBody RestaurantReview getRestaurantReview(@RequestParam String restaurantName) {
-        return dbHelper.selectRestaurantReview(restaurantName);
+        return dbModel.selectRestaurantReview(restaurantName);
     }
 
     @RequestMapping(value = "/getMatches", method = RequestMethod.GET)
     @ResponseBody List<RestaurantReview> getMatches(@RequestParam String pattern) {
-        return dbHelper.getMatches(pattern);
+        return dbModel.getMatches(pattern);
     }
 
     @RequestMapping(value = "/getSorted", method = RequestMethod.GET)
     @ResponseBody List<RestaurantReview> getSorted(@RequestParam String sortingValue) {
-        return dbHelper.selectOrderedReviews(sortingValue, true);
+        return dbModel.selectOrderedReviews(sortingValue, true);
     }
 
     @RequestMapping(value = "/addNewReview", method = RequestMethod.GET)
@@ -62,7 +56,7 @@ public class MainController {
                 Byte.valueOf(jsonObject.get("cuisine").toString()),
                 Byte.valueOf(jsonObject.get("interior").toString()),
                 Byte.valueOf(jsonObject.get("service").toString()));
-        return dbHelper.addNewReviewAndGetUpdatedList(restaurantReview);
+        return dbModel.addNewReviewAndGetUpdatedList(restaurantReview);
     }
 
     @RequestMapping(value = "/editReview", method = RequestMethod.GET)
@@ -76,6 +70,6 @@ public class MainController {
                 Byte.valueOf(jsonObject.get("cuisine").toString()),
                 Byte.valueOf(jsonObject.get("interior").toString()),
                 Byte.valueOf(jsonObject.get("service").toString()));
-        return  dbHelper.updateReviewAndGetUpdatedList(oldRestaurantName, restaurantReview);
+        return  dbModel.updateReviewAndGetUpdatedList(oldRestaurantName, restaurantReview);
     }
 }

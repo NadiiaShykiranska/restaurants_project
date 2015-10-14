@@ -1,18 +1,14 @@
-package javapackage.helpers;
+package javapackage.models;
 
 import javapackage.controllers.HibernateUtil;
-import javapackage.models.RestaurantReview;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
-public class DBHelper {
+public class DBModel {
     public static final String NAME = "name";
     public static final String RATING = "rating";
     public static final String DESC = "desc";
