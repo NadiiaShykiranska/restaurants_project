@@ -59,7 +59,7 @@ public class DBHelper {
         return listReviews;
     }
 
-    public void addNewReview(RestaurantReview restaurantReview){
+    public List<RestaurantReview> addNewReviewAndGetUpdatedList(RestaurantReview restaurantReview){
         String rating = getRating(restaurantReview);
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
@@ -71,13 +71,17 @@ public class DBHelper {
                 .setString("review", restaurantReview.getReview())
                 .setString("location", restaurantReview.getLocation())
                 .setString("name", restaurantReview.getName()).executeUpdate();
+        List result = session.createSQLQuery(
+                "select * from restaurants order by name").list();
+        List<RestaurantReview> listReviews = parseResults(result);
         session.getTransaction().commit();
         if (session.isOpen()) {
             session.close();
         }
+        return listReviews;
     }
 
-    public void updateReview(String oldName, RestaurantReview restaurantReview){
+    public List<RestaurantReview> updateReviewAndGetUpdatedList(String oldName, RestaurantReview restaurantReview){
         String rating = getRating(restaurantReview);
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
@@ -90,10 +94,14 @@ public class DBHelper {
                 .setString("review", restaurantReview.getReview())
                 .setString("location", restaurantReview.getLocation())
                 .setString("name", restaurantReview.getName()).executeUpdate();
+        List result = session.createSQLQuery(
+                "select * from restaurants order by name").list();
+        List<RestaurantReview> listReviews = parseResults(result);
         session.getTransaction().commit();
         if (session.isOpen()) {
             session.close();
         }
+        return listReviews;
     }
 
     private List<RestaurantReview> parseResults(List<Object> results){

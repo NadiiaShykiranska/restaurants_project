@@ -161,6 +161,16 @@
                     contentType: 'application/json',
                     mimeType: 'application/json',
                     data : {data : JSON.stringify(review_array)},
+                    success: function (reviews){
+                    $(document).ready(function() {
+                        $(".restaurant_name_button").remove();
+                        var index = 0;
+                        while (index != reviews.length){
+                            addButton(reviews[index]);
+                            index++;
+                        }
+                    });
+                }
                 });
             }else{
                  $.ajax({
@@ -172,31 +182,18 @@
                     data : {
                         oldRestaurantName : $("#admin_editable_restaurant_name").text(),
                         data : JSON.stringify(review_array)},
+                    success: function (reviews){
+                        $(document).ready(function() {
+                        $(".restaurant_name_button").remove();
+                            var index = 0;
+                            while (index != reviews.length){
+                                addButton(reviews[index]);
+                                index++;
+                            }
+                        });
+                    }
                 });
             }
-        }
-
-        function showUpdatedRestaurantsList(){
-            $(".restaurant_name_button").remove();
-            $.ajax({
-                url : 'getSorted',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json',
-                mimeType: 'application/json',
-                data : ({
-                    sortingValue : "rating"
-                }),
-                success: function (reviews){
-                    $(document).ready(function() {
-                        var index = 0;
-                        while (index != reviews.length){
-                            addButton(reviews[index]);
-                            index++;
-                        }
-                    });
-                }
-            });
             $("#admin_main").show();
         }
 

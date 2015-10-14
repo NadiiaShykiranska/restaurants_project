@@ -52,7 +52,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "/addNewReview", method = RequestMethod.GET)
-    @ResponseBody void addNewReview(@RequestParam String data) throws JSONException{
+    @ResponseBody List<RestaurantReview> addNewReview(@RequestParam String data) throws JSONException{
         JSONArray jsonArray = new JSONArray(data);
         JSONObject jsonObject = (JSONObject) jsonArray.get(0);
         RestaurantReview restaurantReview = new RestaurantReview(
@@ -62,11 +62,11 @@ public class MainController {
                 Byte.valueOf(jsonObject.get("cuisine").toString()),
                 Byte.valueOf(jsonObject.get("interior").toString()),
                 Byte.valueOf(jsonObject.get("service").toString()));
-        dbHelper.addNewReview(restaurantReview);
+        return dbHelper.addNewReviewAndGetUpdatedList(restaurantReview);
     }
 
     @RequestMapping(value = "/editReview", method = RequestMethod.GET)
-    @ResponseBody void editReview(@RequestParam String oldRestaurantName, @RequestParam String data) throws JSONException {
+    @ResponseBody List<RestaurantReview> editReview(@RequestParam String oldRestaurantName, @RequestParam String data) throws JSONException {
         JSONArray jsonArray = new JSONArray(data);
         JSONObject jsonObject = (JSONObject) jsonArray.get(0);
         RestaurantReview restaurantReview = new RestaurantReview(
@@ -76,6 +76,6 @@ public class MainController {
                 Byte.valueOf(jsonObject.get("cuisine").toString()),
                 Byte.valueOf(jsonObject.get("interior").toString()),
                 Byte.valueOf(jsonObject.get("service").toString()));
-        dbHelper.updateReview(oldRestaurantName, restaurantReview);
+        return  dbHelper.updateReviewAndGetUpdatedList(oldRestaurantName, restaurantReview);
     }
 }
