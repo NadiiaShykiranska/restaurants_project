@@ -20,13 +20,13 @@ public class MainController {
 
     @RequestMapping(value="/")
     public String displayRestaurantsOrderedByRating(Model model) {
-        model.addAttribute("reviews",dbModel.selectOrderedReviews(DBModel.RATING, true));
+        model.addAttribute("reviews",dbModel.selectOrderedReviews(DBModel.RATING));
         return "mainPage";
     }
 
     @RequestMapping(value="/admin")
     public String displayRestaurantsReview(Model model) {
-        model.addAttribute("reviews",dbModel.selectOrderedReviews(DBModel.NAME, false));
+        model.addAttribute("reviews",dbModel.selectOrderedReviews(DBModel.NAME));
         return "adminPage";
     }
 
@@ -42,7 +42,7 @@ public class MainController {
 
     @RequestMapping(value = "/getSorted", method = RequestMethod.GET)
     @ResponseBody List<RestaurantReview> getSorted(@RequestParam String sortingValue) {
-        return dbModel.selectOrderedReviews(sortingValue, true);
+        return dbModel.selectOrderedReviews(sortingValue);
     }
 
     @RequestMapping(value = "/addNewReview", method = RequestMethod.GET)

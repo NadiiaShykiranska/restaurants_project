@@ -13,8 +13,8 @@ public class DBModel {
     public static final String RATING = "rating";
     public static final String DESC = "desc";
 
-    public List<RestaurantReview> selectOrderedReviews(String column, Boolean isDesc){
-        String desc = isDesc?DESC:"";
+    public List<RestaurantReview> selectOrderedReviews(String column){
+        String desc = (column.equals(NAME))?"":DESC;
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List result = session.createSQLQuery(
