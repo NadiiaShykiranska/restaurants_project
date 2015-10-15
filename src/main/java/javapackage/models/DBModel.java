@@ -13,13 +13,13 @@ public class DBModel {
     public static final String RATING = "rating";
     public static final String DESC = "desc";
 
-    public List<RestaurantReview> selectOrderedReviews(String column){
+    public List<Restaurant> selectOrderedReviews(String column){
         String desc = (column.equals(NAME))?"":DESC;
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List result = session.createSQLQuery(
                 "select * from restaurants order by "+column+" "+desc).list();
-        List<RestaurantReview> listReviews = parseResults(result);
+        List<Restaurant> listReviews = parseResults(result);
         session.getTransaction().commit();
         if (session.isOpen()) {
             session.close();
@@ -27,13 +27,13 @@ public class DBModel {
         return listReviews;
     }
 
-    public RestaurantReview selectRestaurantReview(String restaurantName){
+    public Restaurant selectRestaurant(String restaurantName){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List result = session.createSQLQuery(
                 "select * from restaurants where name = :restaurantName")
                 .setString("restaurantName", restaurantName).list();
-        RestaurantReview restaurantReview = (RestaurantReview)parseResults(result).get(0);
+        Restaurant restaurantReview = (Restaurant)parseResults(result).get(0);
         session.getTransaction().commit();
         if (session.isOpen()) {
             session.close();
@@ -41,13 +41,13 @@ public class DBModel {
         return restaurantReview;
     }
 
-    public List<RestaurantReview> getMatches(String pattern){
+    public List<Restaurant> getMatches(String pattern){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List result = session.createSQLQuery(
                 "select * from restaurants where name regexp :pattern")
                 .setString("pattern", pattern).list();
-        List<RestaurantReview> listReviews = parseResults(result);
+        List<Restaurant> listReviews = parseResults(result);
         session.getTransaction().commit();
         if (session.isOpen()) {
             session.close();
@@ -55,44 +55,44 @@ public class DBModel {
         return listReviews;
     }
 
-    public List<RestaurantReview> addNewReviewAndGetUpdatedList(RestaurantReview restaurantReview){
-        String rating = getRating(restaurantReview);
+    public List<Restaurant> addNewRestaurantAndGetUpdatedList(Restaurant restaurant){
+        String rating = getRating(restaurant);
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
                 "insert into restaurants (name, location, review, cuisine, interior, service, rating) values(:name, :location, :review, :cuisine, :interior, :service, "+rating+")")
-                .setString("cuisine", String.valueOf(restaurantReview.getCuisine()))
-                .setString("interior", String.valueOf(restaurantReview.getService()))
-                .setString("service", String.valueOf(restaurantReview.getInterior()))
-                .setString("review", restaurantReview.getReview())
-                .setString("location", restaurantReview.getLocation())
-                .setString("name", restaurantReview.getName()).executeUpdate();
+                .setString("cuisine", String.valueOf(restaurant.getCuisine()))
+                .setString("interior", String.valueOf(restaurant.getService()))
+                .setString("service", String.valueOf(restaurant.getInterior()))
+                .setString("review", restaurant.getReview())
+                .setString("location", restaurant.getLocation())
+                .setString("name", restaurant.getName()).executeUpdate();
         List result = session.createSQLQuery(
                 "select * from restaurants order by name").list();
-        List<RestaurantReview> listReviews = parseResults(result);
+        List<Restaurant> listRestaurants = parseResults(result);
         session.getTransaction().commit();
         if (session.isOpen()) {
             session.close();
         }
-        return listReviews;
+        return listRestaurants;
     }
 
-    public List<RestaurantReview> updateReviewAndGetUpdatedList(String oldName, RestaurantReview restaurantReview){
-        String rating = getRating(restaurantReview);
+    public List<Restaurant> updateReviewAndGetUpdatedList(String oldName, Restaurant restaurant){
+        String rating = getRating(restaurant);
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
                 "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review,  rating = "+rating+" where name = :oldName")
                 .setString("oldName", oldName)
-                .setString("cuisine", String.valueOf(restaurantReview.getCuisine()))
-                .setString("interior", String.valueOf(restaurantReview.getService()))
-                .setString("service", String.valueOf(restaurantReview.getInterior()))
-                .setString("review", restaurantReview.getReview())
-                .setString("location", restaurantReview.getLocation())
-                .setString("name", restaurantReview.getName()).executeUpdate();
+                .setString("cuisine", String.valueOf(restaurant.getCuisine()))
+                .setString("interior", String.valueOf(restaurant.getService()))
+                .setString("service", String.valueOf(restaurant.getInterior()))
+                .setString("review", restaurant.getReview())
+                .setString("location", restaurant.getLocation())
+                .setString("name", restaurant.getName()).executeUpdate();
         List result = session.createSQLQuery(
                 "select * from restaurants order by name").list();
-        List<RestaurantReview> listReviews = parseResults(result);
+        List<Restaurant> listReviews = parseResults(result);
         session.getTransaction().commit();
         if (session.isOpen()) {
             session.close();
@@ -100,11 +100,11 @@ public class DBModel {
         return listReviews;
     }
 
-    private List<RestaurantReview> parseResults(List<Object> results){
-        List<RestaurantReview> listReviews = new LinkedList<>();
+    private List<Restaurant> parseResults(List<Object> results){
+        List<Restaurant> listRestaurants = new LinkedList<>();
         for (Object object: results) {
             Object[] o = (Object[]) object;
-            listReviews.add(new RestaurantReview(
+            listRestaurants.add(new Restaurant(
                     Integer.parseInt(o[0].toString()),
                     String.valueOf(o[1]),
                     String.valueOf(o[2]),
@@ -114,10 +114,10 @@ public class DBModel {
                     Byte.parseByte(o[6].toString()),
                     Double.parseDouble(o[7].toString())));
         }
-        return listReviews;
+        return listRestaurants;
     }
 
-    private String getRating(RestaurantReview restaurantReview){
-        return String.valueOf(restaurantReview.getCuisine() * 0.4 + restaurantReview.getInterior() * 0.3 + restaurantReview.getService() * 0.3);
+    private String getRating(Restaurant restaurant){
+        return String.valueOf(restaurant.getCuisine() * 0.4 + restaurant.getInterior() * 0.3 + restaurant.getService() * 0.3);
     }
 }

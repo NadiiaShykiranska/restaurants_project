@@ -1,7 +1,7 @@
 package javapackage.controllers;
 
 import javapackage.models.DBModel;
-import javapackage.models.RestaurantReview;
+import javapackage.models.Restaurant;
 import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,39 +31,39 @@ public class MainController {
     }
 
     @RequestMapping(value = "/getReview", method = RequestMethod.GET)
-    @ResponseBody RestaurantReview getRestaurantReview(@RequestParam String restaurantName) {
-        return dbModel.selectRestaurantReview(restaurantName);
+    @ResponseBody Restaurant getRestaurantReview(@RequestParam String restaurantName) {
+        return dbModel.selectRestaurant(restaurantName);
     }
 
     @RequestMapping(value = "/getMatches", method = RequestMethod.GET)
-    @ResponseBody List<RestaurantReview> getMatches(@RequestParam String pattern) {
+    @ResponseBody List<Restaurant> getMatches(@RequestParam String pattern) {
         return dbModel.getMatches(pattern);
     }
 
     @RequestMapping(value = "/getSorted", method = RequestMethod.GET)
-    @ResponseBody List<RestaurantReview> getSorted(@RequestParam String sortingValue) {
+    @ResponseBody List<Restaurant> getSorted(@RequestParam String sortingValue) {
         return dbModel.selectOrderedReviews(sortingValue);
     }
 
     @RequestMapping(value = "/addNewReview", method = RequestMethod.GET)
-    @ResponseBody List<RestaurantReview> addNewReview(@RequestParam String data) throws JSONException{
+    @ResponseBody List<Restaurant> addNewReview(@RequestParam String data) throws JSONException{
         JSONArray jsonArray = new JSONArray(data);
         JSONObject jsonObject = (JSONObject) jsonArray.get(0);
-        RestaurantReview restaurantReview = new RestaurantReview(
+        Restaurant restaurantReview = new Restaurant(
                 jsonObject.get("name").toString(),
                 jsonObject.get("location").toString(),
                 jsonObject.get("review").toString(),
                 Byte.valueOf(jsonObject.get("cuisine").toString()),
                 Byte.valueOf(jsonObject.get("interior").toString()),
                 Byte.valueOf(jsonObject.get("service").toString()));
-        return dbModel.addNewReviewAndGetUpdatedList(restaurantReview);
+        return dbModel.addNewRestaurantAndGetUpdatedList(restaurantReview);
     }
 
     @RequestMapping(value = "/editReview", method = RequestMethod.GET)
-    @ResponseBody List<RestaurantReview> editReview(@RequestParam String oldRestaurantName, @RequestParam String data) throws JSONException {
+    @ResponseBody List<Restaurant> editReview(@RequestParam String oldRestaurantName, @RequestParam String data) throws JSONException {
         JSONArray jsonArray = new JSONArray(data);
         JSONObject jsonObject = (JSONObject) jsonArray.get(0);
-        RestaurantReview restaurantReview = new RestaurantReview(
+        Restaurant restaurantReview = new Restaurant(
                 jsonObject.get("name").toString(),
                 jsonObject.get("location").toString(),
                 jsonObject.get("review").toString(),
