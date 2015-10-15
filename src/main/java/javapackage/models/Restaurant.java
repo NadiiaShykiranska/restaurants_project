@@ -2,16 +2,15 @@ package javapackage.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Calendar;
 
 @Entity
 @Table(name = "restaurants")
-public class RestaurantReview {
+public class Restaurant {
 
-    public RestaurantReview(){
+    public Restaurant(){
     }
 
-    public RestaurantReview(Integer id, String name, String location, String review, byte cuisine, byte interior, byte service, Double rating){
+    public Restaurant(Integer id, String name, String location, String review, byte cuisine, byte interior, byte service, Double rating){
         this.id=id;
         this.name = name;
         this.location = location;
@@ -22,7 +21,7 @@ public class RestaurantReview {
         this.rating = rating;
     }
 
-    public RestaurantReview(String name, String location, String review, byte cuisine, byte interior, byte service){
+    public Restaurant(String name, String location, String review, byte cuisine, byte interior, byte service){
         this.name = name;
         this.location = location;
         this.review = review;
