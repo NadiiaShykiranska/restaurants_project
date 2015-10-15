@@ -56,17 +56,18 @@ public class DBModel {
     }
 
     public List<Restaurant> addNewRestaurantAndGetUpdatedList(Restaurant restaurant){
-        String rating = getRating(restaurant);
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
-                "insert into restaurants (name, location, review, cuisine, interior, service, rating) values(:name, :location, :review, :cuisine, :interior, :service, "+rating+")")
+                "insert into restaurants (name, location, review, cuisine, interior, service, rating) values(:name, :location, :review, :cuisine, :interior, :service, :rating)")
                 .setString("cuisine", String.valueOf(restaurant.getCuisine()))
                 .setString("interior", String.valueOf(restaurant.getService()))
                 .setString("service", String.valueOf(restaurant.getInterior()))
+                .setString("rating", String.valueOf(restaurant.getRating()))
                 .setString("review", restaurant.getReview())
                 .setString("location", restaurant.getLocation())
-                .setString("name", restaurant.getName()).executeUpdate();
+                .setString("name", restaurant.getName())
+                .executeUpdate();
         List result = session.createSQLQuery(
                 "select * from restaurants order by name").list();
         List<Restaurant> listRestaurants = parseResults(result);
@@ -78,15 +79,15 @@ public class DBModel {
     }
 
     public List<Restaurant> updateReviewAndGetUpdatedList(String oldName, Restaurant restaurant){
-        String rating = getRating(restaurant);
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
-                "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review,  rating = "+rating+" where name = :oldName")
+                "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review, rating = :rating where name = :oldName")
                 .setString("oldName", oldName)
                 .setString("cuisine", String.valueOf(restaurant.getCuisine()))
                 .setString("interior", String.valueOf(restaurant.getService()))
                 .setString("service", String.valueOf(restaurant.getInterior()))
+                .setString("rating", String.valueOf(restaurant.getRating()))
                 .setString("review", restaurant.getReview())
                 .setString("location", restaurant.getLocation())
                 .setString("name", restaurant.getName()).executeUpdate();
@@ -111,13 +112,9 @@ public class DBModel {
                     String.valueOf(o[3]),
                     Byte.parseByte(o[4].toString()),
                     Byte.parseByte(o[5].toString()),
-                    Byte.parseByte(o[6].toString()),
-                    Double.parseDouble(o[7].toString())));
+                    Byte.parseByte(o[6].toString())));
         }
         return listRestaurants;
     }
 
-    private String getRating(Restaurant restaurant){
-        return String.valueOf(restaurant.getCuisine() * 0.4 + restaurant.getInterior() * 0.3 + restaurant.getService() * 0.3);
-    }
 }

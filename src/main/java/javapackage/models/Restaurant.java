@@ -10,7 +10,7 @@ public class Restaurant {
     public Restaurant(){
     }
 
-    public Restaurant(Integer id, String name, String location, String review, byte cuisine, byte interior, byte service, Double rating){
+    public Restaurant(Integer id, String name, String location, String review, byte cuisine, byte interior, byte service){
         this.id=id;
         this.name = name;
         this.location = location;
@@ -18,7 +18,7 @@ public class Restaurant {
         this.cuisine = cuisine;
         this.interior = interior;
         this.service = service;
-        this.rating = rating;
+        this.rating = cuisine * 0.4 + interior * 0.3 + service * 0.3;
     }
 
     public Restaurant(String name, String location, String review, byte cuisine, byte interior, byte service){
@@ -28,6 +28,7 @@ public class Restaurant {
         this.cuisine = cuisine;
         this.interior = interior;
         this.service = service;
+        this.rating = cuisine * 0.4 + interior * 0.3 + service * 0.3;
     }
 
     @Id
