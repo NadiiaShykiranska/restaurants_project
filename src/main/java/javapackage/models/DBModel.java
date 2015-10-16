@@ -27,12 +27,12 @@ public class DBModel {
         return listReviews;
     }
 
-    public Restaurant selectRestaurant(String restaurantName){
+    public Restaurant selectRestaurant(String restaurantID){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List result = session.createSQLQuery(
-                "select * from restaurants where name = :restaurantName")
-                .setString("restaurantName", restaurantName).list();
+                "select * from restaurants where id = :restaurantID")
+                .setString("restaurantID", restaurantID).list();
         Restaurant restaurantReview = (Restaurant)parseResults(result).get(0);
         session.getTransaction().commit();
         if (session.isOpen()) {
@@ -78,12 +78,12 @@ public class DBModel {
         return listRestaurants;
     }
 
-    public List<Restaurant> updateReviewAndGetUpdatedList(String oldName, Restaurant restaurant){
+    public List<Restaurant> updateReviewAndGetUpdatedList(String id, Restaurant restaurant){
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
-                "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review, rating = :rating where name = :oldName")
-                .setString("oldName", oldName)
+                "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review, rating = :rating where id = :id")
+                .setString("id", id)
                 .setString("cuisine", String.valueOf(restaurant.getCuisine()))
                 .setString("interior", String.valueOf(restaurant.getService()))
                 .setString("service", String.valueOf(restaurant.getInterior()))

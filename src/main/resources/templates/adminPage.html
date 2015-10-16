@@ -18,186 +18,30 @@
         <div><p>Edit existing Reviews</p></div>
     </div>
 </div>
-<div id="admin_edit_form">
-    <div id = "admin_editable">Edit review:
-        <label id = "admin_editable_restaurant_name" class="admin_edit_field"></label>
-    </div>
-    <div id = "admin_new">Create new review</div>
-    <div id = "review_details">
-        <p></p>
-        <div id="admin_review_details_name">
-            <label>Restaurant Name:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_name"/>
-        </div>
-        <div id="admin_review_details_location">
-            <label>Location:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_location"/>
-        </div>
-        <div id="admin_review_details_cuisine">
-            <label>Cuisine:</label>
-            <label>1<input type = "radio" name = "cuisine" class = "review_details_radio" value = "1"/></label>
-            <label>2<input type = "radio" name = "cuisine" class = "review_details_radio" value = "2"/></label>
-            <label>3<input type = "radio" name = "cuisine" class = "review_details_radio" value = "3"/></label>
-            <label>4<input type = "radio" name = "cuisine" class = "review_details_radio" value = "4"/></label>
-            <label>5<input type = "radio" name = "cuisine" class = "review_details_radio" value = "5"/></label>
-        </div>
-        </div>
-        <div id="admin_review_details_interior">
-            <label> Interior:</label>
-            <label>1<input type = "radio" name = "interior" class = "review_details_radio" value = "1"/></label>
-            <label>2<input type = "radio" name = "interior" class = "review_details_radio" value = "2"/></label>
-            <label>3<input type = "radio" name = "interior" class = "review_details_radio" value = "3"/></label>
-            <label>4<input type = "radio" name = "interior" class = "review_details_radio" value = "4"/></label>
-            <label>5<input type = "radio" name = "interior" class = "review_details_radio" value = "5"/></label>
-        </div>
-        <div id="admin_review_details_service">
-            <label> Service:</label>
-            <label>1<input type = "radio" name = "service" class = "review_details_radio" value = "1"/></label>
-            <label>2<input type = "radio" name = "service" class = "review_details_radio" value = "2"/></label>
-            <label>3<input type = "radio" name = "service" class = "review_details_radio" value = "3"/></label>
-            <label>4<input type = "radio" name = "service" class = "review_details_radio" value = "4"/></label>
-            <label>5<input type = "radio" name = "service" class = "review_details_radio" value = "5"/></label>
-        </div>
-        <div id="admin_review_details_review">
-            <label> Review:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_review"/>
-        </div>
-    <div id="admin_buttons">
-        <p></p>
-        <button id="cancel_review_button" onclick = "clickCancel()">Cancel</button>
-        <button id="save_review_button" onclick = "clickSave()">Save</button>
-    </div>
-</div>
     <script th:inline="javascript">
         $("#admin_edit_form").hide();
         var reviews_list = [[${reviews}]];
         $(document).ready(function() {
             var index = 0;
             while (index != reviews_list.length){
-                addButton(reviews_list[index]);
+                addButtonToHTML(reviews_list[index]);
                 index++;
             }
         });
 
-        function addButton(reviewObject){
+        function addButtonToHTML(restaurant){
             $("#admin_restaurants_list").append("<div> \
-            <button class='+"restaurant_name_button"+' onclick='+"clickOnRestaurantButton(this)"+'>" + reviewObject.name + "</button></div>");
+            <button id = '+restaurant.id+' class='+"restaurant_name_button"+' onclick='+"clickOnRestaurantButton(this)"+'>" + restaurant.name + "</button></div>");
         }
 
         function clickOnRestaurantButton(Object){
-            $.ajax({
-                url : 'getReview',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json',
-                mimeType: 'application/json',
-                data : ({
-                    restaurantName : Object.innerText
-                }),
-                success: function (reviewDetails) {
-                    $("#admin_editable_restaurant_name").text(reviewDetails.name);
-                    $("#admin_restaurant_name").val(reviewDetails.name);
-                    $("#admin_restaurant_location").val(reviewDetails.location);
-                    $("input[name=cuisine][value='"+reviewDetails.cuisine+"']").prop('checked', true); ;
-                    $("input[name=interior][value='"+reviewDetails.interior+"']").prop('checked', true); ;
-                    $("input[name=service][value='"+reviewDetails.service+"']").prop('checked', true); ;
-                    $("#admin_restaurant_review").val(reviewDetails.review);
-                    $("#admin_edit_form").show();
-                    $("#admin_editable").show();
-                    $("#admin_new").hide();
-                    $("#admin_main").hide();
-                }
-            });
+            window.location.replace("/edit_"+Object.id);
         }
 
         function clickAddNewReview(){
-            $(".admin_edit_field").val("");
-            $(".review_details_radio").prop('checked', false);
-            $("#admin_edit_form").show();
-            $("#admin_editable").hide();
-            $("#admin_new").show();
-            $("#admin_main").hide();
-        }
-
-        function clickCancel(){
-            $("#admin_edit_form").hide();
-            $("#admin_main").show();
-        }
-
-        function clickSave(){
-            if($("#admin_restaurant_name").val()==""){
-                alert("Enter restaurant Name");
-            }else if($("#admin_restaurant_location").val()==""){
-                alert("Enter restaurant Location");
-            }else if($("#admin_restaurant_review").val()==""){
-                alert("Enter restaurant Review");
-            }else if($("input[name=cuisine]:checked").val()==undefined){
-                alert("Check Cuisine Rating");
-            }else if($("input[name=interior]:checked").val()==undefined){
-                alert("Check Interior Rating");
-            }else if($("input[name=service]:checked").val()==undefined){
-                alert("Check Service Rating");
-            }else {
-                var review_array = [];
-                review_array.push({'name': $("#admin_restaurant_name").val(),
-                'location': $("#admin_restaurant_location").val(),
-                'review': $("#admin_restaurant_review").val(),
-                'cuisine': $("input[name=cuisine]:checked").val(),
-                'interior': $("input[name=interior]:checked").val(),
-                'service': $("input[name=service]:checked").val()});
-                saveToDB(review_array);
-                $("#admin_edit_form").hide();
-                showUpdatedRestaurantsList();
-            }
-        }
-
-
-        function saveToDB(review_array){
-            if($("#admin_editable_restaurant_name").is(":hidden")){
-                $.ajax({
-                    url : 'addNewReview',
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    mimeType: 'application/json',
-                    data : {data : JSON.stringify(review_array)},
-                    success: function (reviews){
-                    $(document).ready(function() {
-                        $(".restaurant_name_button").remove();
-                        var index = 0;
-                        while (index != reviews.length){
-                            addButton(reviews[index]);
-                            index++;
-                        }
-                    });
-                }
-                });
-            }else{
-                 $.ajax({
-                    url : 'editReview',
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    mimeType: 'application/json',
-                    data : {
-                        oldRestaurantName : $("#admin_editable_restaurant_name").text(),
-                        data : JSON.stringify(review_array)},
-                    success: function (reviews){
-                        $(document).ready(function() {
-                        $(".restaurant_name_button").remove();
-                            var index = 0;
-                            while (index != reviews.length){
-                                addButton(reviews[index]);
-                                index++;
-                            }
-                        });
-                    }
-                });
-            }
-            $("#admin_main").show();
+            window.location.replace("/add_new_review");
         }
 
     </script>
-
 </body>
 </html>

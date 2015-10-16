@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <title>Restaurant</title>
+</head>
+<body>
+<div id = "review_details">
+    <div id = "review_details_all_info">
+        <div id="review_details_name">
+            <label>Restaurant Name:</label>
+            <label id = "restaurant_name"></label>
+        </div>
+        <div id="review_details_location">
+            <label>Location:</label>
+            <label id = "restaurant_location"></label>
+        </div>
+        <div id="review_details_cuisine">
+            <label>Cuisine:</label>
+            <label id = "restaurant_cuisine"></label>
+        </div>
+        <div id="review_details_interior">
+            <label>Interior:</label>
+            <label id = "restaurant_interior"></label>
+        </div>
+        <div id="review_details_service">
+            <label>Service:</label>
+            <label id = "restaurant_service"></label>
+        </div>
+        <div id="review_details_review">
+            <label>Review:</label>
+            <label id = "restaurant_review"></label>
+        </div>
+    </div>
+    <div id="back">
+        <p></p>
+        <button id="back_button" onclick = "clickBack()">Back</button>
+    </div>
+</div>
+<script th:inline="javascript">
+        var review = [[${reviewDetails}]];
+        $(document).ready(function() {
+            $("#restaurant_name").text(review.name);
+            $("#restaurant_location").text(review.location);
+            $("#restaurant_cuisine").text(review.cuisine);
+            $("#restaurant_interior").text(review.interior);
+            $("#restaurant_service").text(review.service);
+            $("#restaurant_review").text(review.review);
+        });
+
+        function clickBack(){
+            window.location.replace("/");
+        }
+</script>
+</body>
+
+
+</html>
