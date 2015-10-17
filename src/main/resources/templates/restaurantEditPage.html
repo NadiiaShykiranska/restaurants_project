@@ -22,7 +22,8 @@
         </div>
         <div id="admin_review_details_location">
             <label>Location:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_location"/>
+            <input type = "text" class="admin_edit_field" id = "admin_restaurant_location_longitude"/>
+            <input type = "text" class="admin_edit_field" id = "admin_restaurant_location_latitude"/>
         </div>
         <div id="admin_review_details_cuisine">
             <label>Cuisine:</label>
@@ -68,7 +69,8 @@
                 var reviewDetails = [[${restaurant}]];
                 $("#admin_editable_restaurant_name").text(reviewDetails.name);
                 $("#admin_restaurant_name").val(reviewDetails.name);
-                $("#admin_restaurant_location").val(reviewDetails.location);
+                $("#admin_restaurant_location_latitude").val(reviewDetails.latitude);
+                $("#admin_restaurant_location_longitude").val(reviewDetails.longitude);
                 $("input[name=cuisine][value='"+reviewDetails.cuisine+"']").prop('checked', true); ;
                 $("input[name=interior][value='"+reviewDetails.interior+"']").prop('checked', true); ;
                 $("input[name=service][value='"+reviewDetails.service+"']").prop('checked', true); ;
@@ -83,7 +85,9 @@
         function clickSave(){
             if($("#admin_restaurant_name").val()==""){
                 alert("Enter restaurant Name");
-            }else if($("#admin_restaurant_location").val()==""){
+            }else if($("#admin_restaurant_location_latitude").val()==""){
+                alert("Enter restaurant Location");
+            }else if($("#admin_restaurant_location_longitude").val()==""){
                 alert("Enter restaurant Location");
             }else if($("#admin_restaurant_review").val()==""){
                 alert("Enter restaurant Review");
@@ -96,7 +100,8 @@
             }else {
                 var review_array = [];
                 review_array.push({'name': $("#admin_restaurant_name").val(),
-                'location': $("#admin_restaurant_location").val(),
+                'longitude': $("#admin_restaurant_location_longitude").val(),
+                'latitude': $("#admin_restaurant_location_latitude").val(),
                 'review': $("#admin_restaurant_review").val(),
                 'cuisine': $("input[name=cuisine]:checked").val(),
                 'interior': $("input[name=interior]:checked").val(),
@@ -107,15 +112,15 @@
         }
 
 
-        function saveToDB(review_array){
-            if($("#admin_editable_restaurant_name").is(":hidden")){
+        function saveToDB(restaurant){
+            if($("#admin_editable").is(":hidden")){
                 $.ajax({
                     url : 'addNewReview',
                     type: 'GET',
                     dataType: 'json',
                     contentType: 'application/json',
                     mimeType: 'application/json',
-                    data : {data : JSON.stringify(review_array)},
+                    data : { restaurant: JSON.stringify(restaurant)},
                     success: function (reviews){
                     $(document).ready(function() {
                     });
@@ -130,7 +135,7 @@
                     mimeType: 'application/json',
                     data : {
                         id : location.pathname.substring(6),
-                        data : JSON.stringify(review_array)},
+                        restaurant : JSON.stringify(restaurant)},
                     success: function (reviews){
                         $(document).ready(function() {
 

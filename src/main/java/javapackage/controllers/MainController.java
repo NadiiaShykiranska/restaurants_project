@@ -55,12 +55,13 @@ public class MainController {
     }
 
     @RequestMapping(value = "/addNewReview", method = RequestMethod.GET)
-    @ResponseBody List<Restaurant> addNewReview(@RequestParam String data) throws JSONException{
-        JSONArray jsonArray = new JSONArray(data);
+    @ResponseBody List<Restaurant> addNewReview(@RequestParam String restaurant) throws JSONException{
+        JSONArray jsonArray = new JSONArray(restaurant);
         JSONObject jsonObject = (JSONObject) jsonArray.get(0);
         Restaurant restaurantReview = new Restaurant(
                 jsonObject.get("name").toString(),
-                jsonObject.get("location").toString(),
+                Double.valueOf(jsonObject.get("longitude").toString()),
+                Double.valueOf(jsonObject.get("latitude").toString()),
                 jsonObject.get("review").toString(),
                 Byte.valueOf(jsonObject.get("cuisine").toString()),
                 Byte.valueOf(jsonObject.get("interior").toString()),
@@ -69,12 +70,13 @@ public class MainController {
     }
 
     @RequestMapping(value = "/editReview", method = RequestMethod.GET)
-    @ResponseBody List<Restaurant> editReview(@RequestParam String id, @RequestParam String data) throws JSONException {
-        JSONArray jsonArray = new JSONArray(data);
+    @ResponseBody List<Restaurant> editReview(@RequestParam String id, @RequestParam String restaurant) throws JSONException {
+        JSONArray jsonArray = new JSONArray(restaurant);
         JSONObject jsonObject = (JSONObject) jsonArray.get(0);
         Restaurant restaurantReview = new Restaurant(
                 jsonObject.get("name").toString(),
-                jsonObject.get("location").toString(),
+                Double.valueOf(jsonObject.get("longitude").toString()),
+                Double.valueOf(jsonObject.get("latitude").toString()),
                 jsonObject.get("review").toString(),
                 Byte.valueOf(jsonObject.get("cuisine").toString()),
                 Byte.valueOf(jsonObject.get("interior").toString()),

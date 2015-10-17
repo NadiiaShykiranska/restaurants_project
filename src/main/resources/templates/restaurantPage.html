@@ -17,7 +17,8 @@
         </div>
         <div id="review_details_location">
             <label>Location:</label>
-            <label id = "restaurant_location"></label>
+            <label id = "restaurant_location_longitude"></label>
+            <label id = "restaurant_location_latitude"></label>
         </div>
         <div id="review_details_cuisine">
             <label>Cuisine:</label>
@@ -42,14 +43,15 @@
     </div>
 </div>
 <script th:inline="javascript">
-        var review = [[${reviewDetails}]];
+        var restaurant = [[${reviewDetails}]];
         $(document).ready(function() {
-            $("#restaurant_name").text(review.name);
-            $("#restaurant_location").text(review.location);
-            $("#restaurant_cuisine").text(review.cuisine);
-            $("#restaurant_interior").text(review.interior);
-            $("#restaurant_service").text(review.service);
-            $("#restaurant_review").text(review.review);
+            $("#restaurant_name").text(restaurant.name);
+            $("#restaurant_location_longitude").text(restaurant.longitude);
+            $("#restaurant_location_latitude").text(restaurant.latitude);
+            $("#restaurant_cuisine").text(restaurant.cuisine);
+            $("#restaurant_interior").text(restaurant.interior);
+            $("#restaurant_service").text(restaurant.service);
+            $("#restaurant_review").text(restaurant.review);
         });
 
         function clickBack(){

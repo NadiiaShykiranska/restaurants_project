@@ -2,6 +2,8 @@ package javapackage.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 @Entity
 @Table(name = "restaurants")
@@ -10,25 +12,30 @@ public class Restaurant {
     public Restaurant(){
     }
 
-    public Restaurant(Integer id, String name, String location, String review, byte cuisine, byte interior, byte service){
+    public Restaurant(Integer id, String name, Double longitude, Double latitude, Long date, String review, byte cuisine, byte interior, byte service, double rating){
         this.id=id;
         this.name = name;
-        this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.review = review;
         this.cuisine = cuisine;
         this.interior = interior;
         this.service = service;
-        this.rating = cuisine * 0.4 + interior * 0.3 + service * 0.3;
+        this.date = date;
+        this.rating = rating;
     }
 
-    public Restaurant(String name, String location, String review, byte cuisine, byte interior, byte service){
+    public Restaurant(String name, Double longitude, Double latitude, String review, byte cuisine, byte interior, byte service){
         this.name = name;
-        this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.review = review;
         this.cuisine = cuisine;
         this.interior = interior;
         this.service = service;
         this.rating = cuisine * 0.4 + interior * 0.3 + service * 0.3;
+        Calendar calendar = new GregorianCalendar();
+        this.date = calendar.getTimeInMillis();
     }
 
     @Id
@@ -40,8 +47,17 @@ public class Restaurant {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "location", nullable = true)
-    private String location;
+    @NotNull
+    @Column(name = "longitude", nullable = false)
+    private Double longitude;
+
+    @NotNull
+    @Column(name = "latitude", nullable = false)
+    private Double latitude;
+
+    @NotNull
+    @Column(name = "date", nullable = false)
+    private Long date;
 
     @NotNull
     @Column(name = "review", nullable = false)
@@ -87,15 +103,23 @@ public class Restaurant {
         this.review = review;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public void setRating(double rating) {
         this.rating = rating;
     }
 
-    public long getId() {
+    public void setDate(Long date) {
+        this.date = date;
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -123,7 +147,15 @@ public class Restaurant {
         return review;
     }
 
-    public String getLocation() {
-        return location;
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public Long getDate() {
+        return date;
     }
 }

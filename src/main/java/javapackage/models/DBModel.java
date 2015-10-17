@@ -59,14 +59,16 @@ public class DBModel {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
-                "insert into restaurants (name, location, review, cuisine, interior, service, rating) values(:name, :location, :review, :cuisine, :interior, :service, :rating)")
+                "insert into restaurants (name, longitude, latitude, review, cuisine, interior, service, rating, date) values (:name, :longitude, :latitude, :review, :cuisine, :interior, :service, :rating, :date)")
+                .setString("name", restaurant.getName())
+                .setString("longitude", String.valueOf(restaurant.getLongitude()))
+                .setString("latitude", String.valueOf(restaurant.getLatitude()))
+                .setString("review", restaurant.getReview())
                 .setString("cuisine", String.valueOf(restaurant.getCuisine()))
                 .setString("interior", String.valueOf(restaurant.getService()))
                 .setString("service", String.valueOf(restaurant.getInterior()))
                 .setString("rating", String.valueOf(restaurant.getRating()))
-                .setString("review", restaurant.getReview())
-                .setString("location", restaurant.getLocation())
-                .setString("name", restaurant.getName())
+                .setString("date", String.valueOf(restaurant.getDate()))
                 .executeUpdate();
         List result = session.createSQLQuery(
                 "select * from restaurants order by name").list();
@@ -82,15 +84,18 @@ public class DBModel {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         session.createSQLQuery(
-                "update restaurants SET name = :name, location = :location, cuisine = :cuisine, interior = :interior, service = :service, review = :review, rating = :rating where id = :id")
-                .setString("id", id)
+                "update restaurants SET name = :name, date = :date, longitude = :longitude, latitude = :latitude, cuisine = :cuisine, interior = :interior, service = :service, review = :review, rating = :rating where id = :id")
+                .setString("name", restaurant.getName())
+                .setString("date", restaurant.getDate().toString())
+                .setString("longitude", String.valueOf(restaurant.getLongitude()))
+                .setString("latitude", String.valueOf(restaurant.getLatitude()))
                 .setString("cuisine", String.valueOf(restaurant.getCuisine()))
-                .setString("interior", String.valueOf(restaurant.getService()))
-                .setString("service", String.valueOf(restaurant.getInterior()))
-                .setString("rating", String.valueOf(restaurant.getRating()))
+                .setString("interior", String.valueOf(restaurant.getInterior()))
+                .setString("service", String.valueOf(restaurant.getService()))
                 .setString("review", restaurant.getReview())
-                .setString("location", restaurant.getLocation())
-                .setString("name", restaurant.getName()).executeUpdate();
+                .setString("rating", String.valueOf(restaurant.getRating()))
+                .setString("id", id)
+                .executeUpdate();
         List result = session.createSQLQuery(
                 "select * from restaurants order by name").list();
         List<Restaurant> listReviews = parseResults(result);
@@ -108,11 +113,14 @@ public class DBModel {
             listRestaurants.add(new Restaurant(
                     Integer.parseInt(o[0].toString()),
                     String.valueOf(o[1]),
-                    String.valueOf(o[2]),
-                    String.valueOf(o[3]),
-                    Byte.parseByte(o[4].toString()),
-                    Byte.parseByte(o[5].toString()),
-                    Byte.parseByte(o[6].toString())));
+                    Double.parseDouble(o[2].toString()),
+                    Double.parseDouble(o[3].toString()),
+                    Long.parseLong(o[4].toString()),
+                    String.valueOf(o[5]),
+                    Byte.parseByte(o[6].toString()),
+                    Byte.parseByte(o[7].toString()),
+                    Byte.parseByte(o[8].toString()),
+                    Double.parseDouble(o[9].toString())));
         }
         return listRestaurants;
     }
