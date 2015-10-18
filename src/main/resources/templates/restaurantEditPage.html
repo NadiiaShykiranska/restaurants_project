@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en" th:inline="javascript"></script>
     <title>Restaurant Expert Admin</title>
 </head>
 <body>
@@ -14,46 +15,55 @@
         <label id = "admin_editable_restaurant_name" class="admin_edit_field"></label>
     </div>
     <div id = "admin_new">Create new review</div>
-    <div id = "review_details">
+    <table id = "review_details">
         <p></p>
-        <div id="admin_review_details_name">
-            <label>Restaurant Name:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_name"/>
-        </div>
-        <div id="admin_review_details_location">
-            <label>Location:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_location_longitude"/>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_location_latitude"/>
-        </div>
-        <div id="admin_review_details_cuisine">
-            <label>Cuisine:</label>
-            <label>1<input type = "radio" name = "cuisine" class = "review_details_radio" value = "1"/></label>
-            <label>2<input type = "radio" name = "cuisine" class = "review_details_radio" value = "2"/></label>
-            <label>3<input type = "radio" name = "cuisine" class = "review_details_radio" value = "3"/></label>
-            <label>4<input type = "radio" name = "cuisine" class = "review_details_radio" value = "4"/></label>
-            <label>5<input type = "radio" name = "cuisine" class = "review_details_radio" value = "5"/></label>
-        </div>
-        </div>
-        <div id="admin_review_details_interior">
-            <label> Interior:</label>
-            <label>1<input type = "radio" name = "interior" class = "review_details_radio" value = "1"/></label>
-            <label>2<input type = "radio" name = "interior" class = "review_details_radio" value = "2"/></label>
-            <label>3<input type = "radio" name = "interior" class = "review_details_radio" value = "3"/></label>
-            <label>4<input type = "radio" name = "interior" class = "review_details_radio" value = "4"/></label>
-            <label>5<input type = "radio" name = "interior" class = "review_details_radio" value = "5"/></label>
-        </div>
-        <div id="admin_review_details_service">
-            <label> Service:</label>
-            <label>1<input type = "radio" name = "service" class = "review_details_radio" value = "1"/></label>
-            <label>2<input type = "radio" name = "service" class = "review_details_radio" value = "2"/></label>
-            <label>3<input type = "radio" name = "service" class = "review_details_radio" value = "3"/></label>
-            <label>4<input type = "radio" name = "service" class = "review_details_radio" value = "4"/></label>
-            <label>5<input type = "radio" name = "service" class = "review_details_radio" value = "5"/></label>
-        </div>
-        <div id="admin_review_details_review">
-            <label> Review:</label>
-            <input type = "text" class="admin_edit_field" id = "admin_restaurant_review"/>
-        </div>
+        <tr id="admin_review_details_name">
+            <td><label>Restaurant:</label></td>
+            <td><input type = "text" class="admin_edit_field" id = "admin_restaurant_name"/></td>
+            <td>*</td>
+        </tr>
+        <tr id="admin_review_details_location">
+            <td colspan="3"><div id="map" style="width: 300px; height: 200px"></div></td>
+        </tr>
+        <tr id="admin_review_details_cuisine">
+            <td><label>Cuisine:</label></td>
+            <td>
+                <label>1<input type = "radio" name = "cuisine" class = "review_details_radio" value = "1"/></label>
+                <label>2<input type = "radio" name = "cuisine" class = "review_details_radio" value = "2"/></label>
+                <label>3<input type = "radio" name = "cuisine" class = "review_details_radio" value = "3"/></label>
+                <label>4<input type = "radio" name = "cuisine" class = "review_details_radio" value = "4"/></label>
+                <label>5<input type = "radio" name = "cuisine" class = "review_details_radio" value = "5"/></label>
+            </td>
+            <td>*</td>
+        </tr>
+        <tr id="admin_review_details_interior">
+            <td><label> Interior:</label></td>
+            <td>
+                <label>1<input type = "radio" name = "interior" class = "review_details_radio" value = "1"/></label>
+                <label>2<input type = "radio" name = "interior" class = "review_details_radio" value = "2"/></label>
+                <label>3<input type = "radio" name = "interior" class = "review_details_radio" value = "3"/></label>
+                <label>4<input type = "radio" name = "interior" class = "review_details_radio" value = "4"/></label>
+                <label>5<input type = "radio" name = "interior" class = "review_details_radio" value = "5"/></label>
+            </td>
+            <td>*</td>
+        </tr>
+        <tr id="admin_review_details_service">
+            <td><label> Service:</label></td>
+            <td>
+                <label>1<input type = "radio" name = "service" class = "review_details_radio" value = "1"/></label>
+                <label>2<input type = "radio" name = "service" class = "review_details_radio" value = "2"/></label>
+                <label>3<input type = "radio" name = "service" class = "review_details_radio" value = "3"/></label>
+                <label>4<input type = "radio" name = "service" class = "review_details_radio" value = "4"/></label>
+                <label>5<input type = "radio" name = "service" class = "review_details_radio" value = "5"/></label>
+            </td>
+            <td>*</td>
+        </tr>
+        <tr id="admin_review_details_review">
+            <td><label> Review:</label></td>
+            <td><input type = "text" class="admin_edit_field" id = "admin_restaurant_review"/></td>
+            <td>*</td>
+        </tr>
+    </table>
     <div id="admin_buttons">
         <p></p>
         <button id="cancel_review_button" onclick = "clickCancel()">Cancel</button>
@@ -64,19 +74,37 @@
         $(document).ready(function() {
             if(location.pathname=="/add_new_review"){
                 $("#admin_editable").hide();
+                addLocation("46.45", "30.74", "New Restaurant");
             }else{
                 $("#admin_new").hide();
                 var reviewDetails = [[${restaurant}]];
                 $("#admin_editable_restaurant_name").text(reviewDetails.name);
                 $("#admin_restaurant_name").val(reviewDetails.name);
-                $("#admin_restaurant_location_latitude").val(reviewDetails.latitude);
-                $("#admin_restaurant_location_longitude").val(reviewDetails.longitude);
                 $("input[name=cuisine][value='"+reviewDetails.cuisine+"']").prop('checked', true); ;
                 $("input[name=interior][value='"+reviewDetails.interior+"']").prop('checked', true); ;
                 $("input[name=service][value='"+reviewDetails.service+"']").prop('checked', true); ;
                 $("#admin_restaurant_review").val(reviewDetails.review);
+                addLocation(reviewDetails.longitude, reviewDetails.latitude, reviewDetails.name);
             }
         });
+
+        function addLocation(longitude, latitude, name){
+            ymaps.ready(function () {
+                var geolocation = ymaps.geolocation,
+                    myMap = new ymaps.Map('map', {
+                        center: [longitude, latitude],
+                        zoom: 14,
+                        controls: ['geolocationControl', 'zoomControl', 'searchControl', 'fullscreenControl']
+                    });
+
+                myMap.geoObjects.add(new ymaps.Placemark([longitude, latitude], {
+                    hintContent: name
+                    }, {
+                        preset: 'islands#circleDotIcon',
+                        iconColor: '#0095b6'
+                }));
+            });
+        }
 
         function clickCancel(){
             window.location.replace("/admin");
@@ -85,10 +113,6 @@
         function clickSave(){
             if($("#admin_restaurant_name").val()==""){
                 alert("Enter restaurant Name");
-            }else if($("#admin_restaurant_location_latitude").val()==""){
-                alert("Enter restaurant Location");
-            }else if($("#admin_restaurant_location_longitude").val()==""){
-                alert("Enter restaurant Location");
             }else if($("#admin_restaurant_review").val()==""){
                 alert("Enter restaurant Review");
             }else if($("input[name=cuisine]:checked").val()==undefined){
@@ -100,8 +124,8 @@
             }else {
                 var review_array = [];
                 review_array.push({'name': $("#admin_restaurant_name").val(),
-                'longitude': $("#admin_restaurant_location_longitude").val(),
-                'latitude': $("#admin_restaurant_location_latitude").val(),
+                'longitude': "46.45",
+                'latitude': "30.74",
                 'review': $("#admin_restaurant_review").val(),
                 'cuisine': $("input[name=cuisine]:checked").val(),
                 'interior': $("input[name=interior]:checked").val(),
@@ -110,7 +134,6 @@
                 window.location.replace("/admin");
             }
         }
-
 
         function saveToDB(restaurant){
             if($("#admin_editable").is(":hidden")){

@@ -6,59 +6,89 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en" th:inline="javascript"></script>
     <title>Restaurant</title>
 </head>
 <body>
-<div id = "review_details">
-    <div id = "review_details_all_info">
-        <div id="review_details_name">
-            <label>Restaurant Name:</label>
-            <label id = "restaurant_name"></label>
-        </div>
-        <div id="review_details_location">
-            <label>Location:</label>
-            <label id = "restaurant_location_longitude"></label>
-            <label id = "restaurant_location_latitude"></label>
-        </div>
-        <div id="review_details_cuisine">
-            <label>Cuisine:</label>
-            <label id = "restaurant_cuisine"></label>
-        </div>
-        <div id="review_details_interior">
-            <label>Interior:</label>
-            <label id = "restaurant_interior"></label>
-        </div>
-        <div id="review_details_service">
-            <label>Service:</label>
-            <label id = "restaurant_service"></label>
-        </div>
-        <div id="review_details_review">
-            <label>Review:</label>
-            <label id = "restaurant_review"></label>
-        </div>
-    </div>
+    <table id = "review_details_all_info">
+        <tr id="review_details_name">
+            <td><label>Restaurant:</label></td>
+            <td><label id = "restaurant_name"></label></td>
+        </tr>
+        <tr id="review_details_location">
+            <td colspan = "2"><div id="map" style="width: 300px; height: 200px"></div></td>
+        </tr>
+        <tr id="review_details_cuisine">
+            <td><label>Cuisine:</label></td>
+            <td><label id = "restaurant_cuisine"></label></td>
+        </tr>
+        <tr id="review_details_interior">
+            <td><label>Interior:</label></td>
+            <td><label id = "restaurant_interior"></label></td>
+        </tr>
+        <tr id="review_details_service">
+            <td><label>Service:</label></td>
+            <td><label id = "restaurant_service"></label></td>
+        </tr>
+        <tr id="review_details_review">
+            <td><label>Review:</label></td>
+            <td><label id = "restaurant_review"></label></td>
+        </tr>
+        <tr id="share_buttons">
+            <td><label>Share:</label></td>
+            <td class="social_share">
+                <a class="social_share_link" href="http://www.facebook.com/sharer.php?u=http://localhost:8080">Facebook</a>
+                <a class="social_share_link" href="http://www.vk.com/share.php?u=http://localhost:8080">VK</a>
+                <a class="social_share_link" href="https://plus.google.com/share?url=http://localhost:8080">Google+</a>
+            </td>
+        </tr>
+    </table>
     <div id="back">
         <p></p>
         <button id="back_button" onclick = "clickBack()">Back</button>
     </div>
-</div>
-<script th:inline="javascript">
-        var restaurant = [[${reviewDetails}]];
+    <script th:inline="javascript">
+        var restaurant = [[${reviewDetails}]]
+
         $(document).ready(function() {
             $("#restaurant_name").text(restaurant.name);
-            $("#restaurant_location_longitude").text(restaurant.longitude);
-            $("#restaurant_location_latitude").text(restaurant.latitude);
             $("#restaurant_cuisine").text(restaurant.cuisine);
             $("#restaurant_interior").text(restaurant.interior);
             $("#restaurant_service").text(restaurant.service);
             $("#restaurant_review").text(restaurant.review);
+            addLocation(restaurant);
+            addSocialShareLinks();
         });
+
+        function addLocation(restaurant){
+            ymaps.ready(function () {
+                var geolocation = ymaps.geolocation,
+                    myMap = new ymaps.Map('map', {
+                        center: [restaurant.longitude, restaurant.latitude],
+                        zoom: 14,
+                        controls: ['geolocationControl', 'zoomControl', 'searchControl', 'fullscreenControl']
+                    });
+
+                myMap.geoObjects.add(new ymaps.Placemark([restaurant.longitude, restaurant.latitude], {
+                    hintContent: restaurant.name
+                    }, {
+                        preset: 'islands#circleDotIcon',
+                        iconColor: '#0095b6'
+                }));
+            });
+        }
+
+        function addSocialShareLinks(){
+            var path = location.pathname;
+            $(".social_share_link").each( function( index, element ){
+                var href = $( this ).attr("href");
+                $( this ).attr("href", href + path);
+            });
+        }
 
         function clickBack(){
             window.location.replace("/");
         }
-</script>
+    </script>
 </body>
-
-
 </html>

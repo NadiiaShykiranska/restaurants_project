@@ -6,46 +6,77 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en" th:inline="javascript"></script>
     <title>Restaurant Expert</title>
 </head>
 <body>
     <div id = "main_page">
         <div id = "logo">Restaurant Expert</div>
-        <div id = "map"></div>
+        <div id="map" style="width: 300px; height: 400px"></div>
         <div id = "search">
             <input id = "search_field" type = "text" placeholder = "search"/>
             <button id = "search_button" onclick = "clickSearch()">Search</button>
+            <button id="show_all_button" onclick = "clickShowAll()">Show All</button>
         </div>
         <div id = "sorting">Sorted by:
             <select id = "selector" onchange="changeSelector()">
-                <option class = "selector_option">rating</option>
-                <option class = "selector_option">cuisine</option>
-                <option class = "selector_option">interior</option>
-                <option class = "selector_option">service</option>
-                <option class = "selector_option">name</option>
-                <option class = "selector_option">date</option>
+                <option class = "selector_option" value = "rating">rating</option>
+                <option class = "selector_option" value = "cuisine">cuisine</option>
+                <option class = "selector_option" value = "interior">interior</option>
+                <option class = "selector_option" value = "service">service</option>
+                <option class = "selector_option" value = "name">name</option>
+                <option class = "selector_option" value = "date">date</option>
             </select>
         </div>
-        <div id = "restaurants_list"><p></p></div>
-        <div id = "show_all">
-            <button id="show_all_button" onclick = "clickShowAll()">ShowAll</button>
+        <div><p></p>
+            <table id = "restaurants_list"></table>
         </div>
     </div>
     <script th:inline="javascript">
         var reviews_list = [[${restaurants}]];
         $(document).ready(function() {
+            $("#show_all_button").hide()
+            if(location.pathname=="/"){
+                $('#selector option[value=rating]').prop('selected', 'selected');
+            }else if (location.pathname.indexOf("/sorted_by")==0){
+                var selectorValue = location.pathname.substring(11);
+                $('#selector option[value='+selectorValue+']').prop('selected', 'selected');
+            }else{
+                $("#sorting").hide();
+                $("#show_all_button").show();
+            }
+
             var index = 0;
             while (index != reviews_list.length){
-                addButtonToHTML(reviews_list[index]);
+                $("#restaurants_list").append("<tr><td><button id = '+reviews_list[index].id+' class='+"restaurant_name_button"+' onclick='+"clickOnRestaurantButton(this)"+'>" + (index+1) + ". "+ reviews_list[index].name + "</button></td></tr>")
                 index++;
             }
-            $("#show_all").hide()
         });
 
-        function addButtonToHTML(restaurant){
-            $("#restaurants_list").append("<div> \
-            <button id = '+restaurant.id+' class='+"restaurant_name_button"+' onclick='+"clickOnRestaurantButton(this)"+'>" + restaurant.name + "</button></div>")
-        }
+        ymaps.ready(function () {
+            var geolocation = ymaps.geolocation,
+                myMap = new ymaps.Map('map', {
+                    center: [46.45, 30.74],
+                    zoom: 12,
+                    controls: ['geolocationControl', 'zoomControl', 'searchControl', 'fullscreenControl']
+                });
+
+            var index = 0;
+            while (index != reviews_list.length){
+                placemark = new ymaps.Placemark([reviews_list[index].longitude, reviews_list[index].latitude], {
+                        hintContent: reviews_list[index].name,
+                        iconContent: (index+1)
+                    }, {
+                        preset: 'islands#icon',
+                        iconColor: '#0095b6'
+                });
+                myMap.geoObjects.add(placemark);
+                placemark.events.add('click', function(){
+                    alert("Click on restaurant");
+                });
+                index++;
+            }
+        });
 
         function clickSearch(){
             var pattern = $("#search_field").val();
@@ -61,16 +92,7 @@
                     }),
                     success: function (reviews){
                         if(reviews.length!=0){
-                            $("#sorting").hide();
-                            $("#show_all").show();
-                            $(".restaurant_name_button").remove();
-                            $(document).ready(function() {
-                                var index = 0;
-                                while (index != reviews.length){
-                                    addButtonToHTML(reviews[index]);
-                                    index++;
-                                }
-                            });
+                            window.location.replace("/search="+pattern);
                         }else{
                             alert("Nothing was found. Try different search options");
                         }
@@ -82,53 +104,12 @@
         }
 
         function clickShowAll(){
-            $("#search_field").val("");
-            $(".restaurant_name_button").remove();
-            $("#sorting").show();
-            $("#show_all").hide();
-            $.ajax({
-                url : 'getSorted',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json',
-                mimeType: 'application/json',
-                data : ({
-                    sortingValue : "rating"
-                }),
-                success: function (reviews){
-                    $(document).ready(function() {
-                        var index = 0;
-                        while (index != reviews.length){
-                            addButtonToHTML(reviews[index]);
-                            index++;
-                        }
-                    });
-                }
-            });
+            window.location.replace("/");
         }
 
         function changeSelector(){
-            $(".restaurant_name_button").remove();
-            var selectedText = $("#selector option:selected").text();
-            $.ajax({
-                url : 'getSorted',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json',
-                mimeType: 'application/json',
-                data : ({
-                    sortingValue : selectedText
-                }),
-                success: function (reviews){
-                    $(document).ready(function() {
-                        var index = 0;
-                        while (index != reviews.length){
-                            addButtonToHTML(reviews[index]);
-                            index++;
-                        }
-                    });
-                }
-            });
+            var selectOption = $("#selector option:selected").val();
+            window.location.replace("/sorted_by_"+selectOption);
         }
 
         function clickOnRestaurantButton(Object){
@@ -136,6 +117,5 @@
         }
 
     </script>
-
 </body>
 </html>

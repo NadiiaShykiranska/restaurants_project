@@ -21,14 +21,21 @@ public class MainController {
         return "mainPage";
     }
 
+    @RequestMapping(value="/sorted_by_{selectOption}")
+    public String displayManePageSorted(@PathVariable String selectOption, Model model) {
+        model.addAttribute("restaurants",dbModel.selectOrderedReviews(selectOption));
+        return "mainPage";
+    }
+
+    @RequestMapping(value="/search={pattern}")
+    public String displayManePageMatches(@PathVariable String pattern, Model model) {
+        model.addAttribute("restaurants",dbModel.getMatches(pattern));
+        return "mainPage";
+    }
+
     @RequestMapping(value = "/getMatches", method = RequestMethod.GET)
     @ResponseBody List<Restaurant> getMatches(@RequestParam String pattern) {
         return dbModel.getMatches(pattern);
-    }
-
-    @RequestMapping(value = "/getSorted", method = RequestMethod.GET)
-    @ResponseBody List<Restaurant> getSorted(@RequestParam String sortingValue) {
-        return dbModel.selectOrderedReviews(sortingValue);
     }
 
     @RequestMapping(value="/restaurant_{restaurantID}")
