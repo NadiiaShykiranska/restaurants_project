@@ -52,13 +52,13 @@ public class MainController {
 
     @RequestMapping(value="/add_new_review")
     public String displayRestaurantEditPage(Model model) {
-        return "restaurantEditPage";
+        return "editPage";
     }
 
     @RequestMapping(value="/edit_{restaurantID}")
     public String displayAdminEditPage(@PathVariable String restaurantID, Model model) {
         model.addAttribute("restaurant",dbModel.selectRestaurant(restaurantID));
-        return "restaurantEditPage";
+        return "editPage";
     }
 
     @RequestMapping(value = "/addNewReview", method = RequestMethod.GET)
