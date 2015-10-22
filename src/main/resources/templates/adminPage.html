@@ -7,17 +7,29 @@
     <link rel="stylesheet" href="adminPage.css"/>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.indigo-pink.min.css"/>
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <title>Restaurant Expert Admin</title>
 </head>
 <body>
-<div id="admin_main">
-    <div>Restaurant Expert Admin</div>
-    <div id = "add_new_review">
-        <p><button id = "add_new_button" onclick="clickAddNewReview()">Add new Review</button></p>
-    </div>
-    <div id = "admin_restaurants_list">
-        <div><p>Edit existing Reviews</p></div>
-    </div>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">Restaurant Expert Admin</span>
+            <div class="mdl-layout-spacer"></div>
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" onclick="clickAddNewReview()">
+                <i class="material-icons">add</i>
+            </button>
+        </div>
+    </header>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <div id = "admin_restaurants_list">
+                <p></p>
+            </div>
+        </div>
+    </main>
 </div>
     <script th:inline="javascript">
         $("#admin_edit_form").hide();
@@ -32,7 +44,7 @@
 
         function addButtonToHTML(restaurant){
             $("#admin_restaurants_list").append("<div> \
-            <button id = '+restaurant.id+' class='+"restaurant_name_button"+' onclick='+"clickOnRestaurantButton(this)"+'>" + restaurant.name + "</button></div>");
+            <button id = '+restaurant.id+' class='+"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"+' onclick='+"clickOnRestaurantButton(this)"+'>" + restaurant.name + "</button></div>");
         }
 
         function clickOnRestaurantButton(Object){
