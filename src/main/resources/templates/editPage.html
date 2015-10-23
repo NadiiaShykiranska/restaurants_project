@@ -25,12 +25,15 @@
         <main class="mdl-layout__content">
             <div class="page-content">
                 <div id="admin_edit_form">
+
                     <form action="#">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input class="mdl-textfield__input" type="text" id="admin_restaurant_name" />
                             <label class="mdl-textfield__label" for="admin_restaurant_name">Restaurant Name...</label>
                         </div>
                     </form>
+
+
                     <div id="admin_review_details_cuisine">
                         <label class="mdl-label">Cuisine:
                             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="cuisine-1">
@@ -103,13 +106,21 @@
                             </label>
                         </label>
                     </div>
+
                     <form action="#">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                            <textarea class="mdl-textfield__input" type="text" rows= "3" id = "admin_restaurant_review" ></textarea>
+                            <textarea class="mdl-textfield__input" type="text" rows= "5" id = "admin_restaurant_review" ></textarea>
                             <label class="mdl-textfield__label" for="admin_restaurant_review">Review...</label>
                         </div>
                     </form>
-                    <div id="map" style="width: 300px; height: 200px"></div>
+
+                    <div id="admin_review_details_map">
+                        <button id="map_button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick = "clickMap()">
+                            Show Location Details
+                        </button>
+                        <div id="map" style="width: 300px; height: 200px"></div>
+                    </div>
+
                 </div>
             </div>
         </main>
@@ -117,6 +128,7 @@
 
     <script th:inline="javascript">
         $(document).ready(function() {
+            $("#map").hide();
             if(location.pathname=="/add_new_review"){
                 addLocation("46.45", "30.74", "New Restaurant");
             }else{
@@ -130,6 +142,16 @@
                 addLocation(reviewDetails.longitude, reviewDetails.latitude, reviewDetails.name);
             }
         });
+
+        function clickMap(){
+            if($("#map").is(":visible")){
+                $("#map").hide();
+                $("#map_button").html('Show Location Details')
+            }else{
+                $("#map").show();
+                $("#map_button").html('hide Location Details')
+            }
+        }
 
         function addLocation(longitude, latitude, name){
             ymaps.ready(function () {
@@ -209,6 +231,7 @@
                 });
             }
         }
+
     </script>
 </body>
 </html>
