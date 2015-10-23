@@ -8,48 +8,63 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=en" th:inline="javascript"></script>
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.indigo-pink.min.css"/>
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Restaurant Expert</title>
 </head>
 <body>
-    <div id = "main_page">
-        <div id = "logo">Restaurant Expert</div>
-        <div id="map" style="width: 300px; height: 400px"></div>
-        <div id = "search">
-            <input id = "search_field" type = "text" placeholder = "search"/>
-            <button id = "search_button" onclick = "clickSearch()">Search</button>
-            <button id="show_all_button" onclick = "clickShowAll()">Show All</button>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+            <div class="mdl-layout-spacer"></div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
+                  mdl-textfield--floating-label mdl-textfield--align-right">
+                <label class="mdl-button mdl-js-button mdl-button--icon" for="search_field">
+                    <i class="material-icons">search</i>
+                </label>
+                <div class="mdl-textfield__expandable-holder">
+                    <input class="mdl-textfield__input" type="text" id="search_field" onchange="setSearchValue()"/>
+                </div>
+            </div>
+            <div><button id = "show_all_button" onclick="clickShowAll()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">Show All</button></div>
         </div>
-        <div id = "sorting">Sorted by:
-            <select id = "selector" onchange="changeSelector()">
-                <option class = "selector_option" value = "rating">rating</option>
-                <option class = "selector_option" value = "cuisine">cuisine</option>
-                <option class = "selector_option" value = "interior">interior</option>
-                <option class = "selector_option" value = "service">service</option>
-                <option class = "selector_option" value = "name">name</option>
-                <option class = "selector_option" value = "date">date</option>
-            </select>
-        </div>
-        <div><p></p>
-            <table id = "restaurants_list"></table>
-        </div>
+    </header>
+    <div class="mdl-layout__drawer">
+        <span class="mdl-layout-title">Sorted By:</span>
+        <nav class="mdl-navigation">
+            <button id = "rating" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick = "clickSorting(this)">rating</button>
+            <button id = "cuisine" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick = "clickSorting(this)">cuisine</button>
+            <button id = "interior" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick = "clickSorting(this)">interior</button>
+            <button id = "service" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick = "clickSorting(this)">service</button>
+            <button id = "date" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick = "clickSorting(this)">date</button>
+            <button id = "name" class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick = "clickSorting(this)">name</button>
+        </nav>
     </div>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <div id = "main_page">
+                <div></div>
+                <div id="map" style="width: 300px; height: 400px"></div>
+                <div><p></p>
+                    <table id = "restaurants_list"></table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
     <script th:inline="javascript">
         var reviews_list = [[${restaurants}]];
         $(document).ready(function() {
-            $("#show_all_button").hide()
-            if(location.pathname=="/"){
-                $('#selector option[value=rating]').prop('selected', 'selected');
-            }else if (location.pathname.indexOf("/sorted_by")==0){
-                var selectorValue = location.pathname.substring(11);
-                $('#selector option[value='+selectorValue+']').prop('selected', 'selected');
-            }else{
-                $("#sorting").hide();
-                $("#show_all_button").show();
-            }
-
+            if(location.pathname=="/")
+                $('#show_all_button').hide();
+            else if(location.pathname.indexOf("/sorted")==0)
+                $('#show_all_button').hide();
             var index = 0;
             while (index != reviews_list.length){
-                $("#restaurants_list").append("<tr><td><button id = '+reviews_list[index].id+' class='+"restaurant_name_button"+' onclick='+"clickOnRestaurantButton(this)"+'>" + (index+1) + ". "+ reviews_list[index].name + "</button></td></tr>")
+                $("#restaurants_list").append("<tr><td><button id = '+reviews_list[index].id+' class='+"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect"+' onclick='+"clickOnRestaurantButton(this)"+'>" + (index+1) + ". "+ reviews_list[index].name + "</button></td></tr>")
                 index++;
             }
         });
@@ -58,8 +73,8 @@
             var geolocation = ymaps.geolocation,
                 myMap = new ymaps.Map('map', {
                     center: [46.45, 30.74],
-                    zoom: 12,
-                    controls: ['geolocationControl', 'zoomControl', 'searchControl', 'fullscreenControl']
+                    zoom: 14,
+                    controls: ['geolocationControl']
                 });
 
             var index = 0;
@@ -79,7 +94,7 @@
             }
         });
 
-        function clickSearch(){
+        function setSearchValue(){
             var pattern = $("#search_field").val();
             if(pattern.length!=0){
                 $.ajax({
@@ -108,9 +123,8 @@
             window.location.replace("/");
         }
 
-        function changeSelector(){
-            var selectOption = $("#selector option:selected").val();
-            window.location.replace("/sorted_by_"+selectOption);
+        function clickSorting(Object){
+            window.location.replace("/sorted_by_"+Object.id);
         }
 
         function clickOnRestaurantButton(Object){
