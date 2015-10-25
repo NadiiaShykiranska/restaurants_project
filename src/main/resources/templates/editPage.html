@@ -131,7 +131,7 @@
         $(document).ready(function() {
             $("#map").hide();
             if(location.pathname=="/add_new_review"){
-                addLocation("46.45", "30.74", "New Restaurant");
+                addCurrentGeolocation();
             }else{
                 var reviewDetails = [[${restaurant}]];
                 $("#admin_editable_restaurant_name").text(reviewDetails.name);
@@ -144,6 +144,45 @@
             }
         });
 
+        function addCurrentGeolocation(){
+            ymaps.ready(function () {
+                var geolocation = ymaps.geolocation,
+                    myMap = new ymaps.Map('map', {
+                        center: [46.455, 30.744],
+                        zoom: 16,
+                        controls: ['geolocationControl','fullscreenControl']
+                    });
+
+                geolocation.get({
+                    provider: 'browser',
+                    mapStateAutoApply: true
+                }).then(function (result) {
+                    result.geoObjects.options.set('preset', 'islands#dotIcon');
+                    result.geoObjects.options.set('iconColor', '#3b5998');
+                    result.geoObjects.options.set('draggable', 'true');
+                    myMap.geoObjects.add(result.geoObjects);
+                });
+            })
+        }
+
+        function addLocation(longitude, latitude, name){
+            ymaps.ready(function () {
+                var geolocation = ymaps.geolocation,
+                    myMap = new ymaps.Map('map', {
+                        center: [longitude, latitude],
+                        zoom: 16,
+                        controls: ['geolocationControl','fullscreenControl']
+                    });
+                myMap.geoObjects.add(new ymaps.Placemark([longitude, latitude], {
+                    hintContent: name
+                    }, {
+                        preset: 'islands#dotIcon',
+                        iconColor: '#3b5998',
+                        draggable: true
+                }));
+            });
+        }
+
         function clickMap(){
             if($("#map").is(":visible")){
                 $("#map").hide();
@@ -152,24 +191,6 @@
                 $("#map").show();
                 $("#map_button").html('Hide Location Details')
             }
-        }
-
-        function addLocation(longitude, latitude, name){
-            ymaps.ready(function () {
-                var geolocation = ymaps.geolocation,
-                    myMap = new ymaps.Map('map', {
-                        center: [longitude, latitude],
-                        zoom: 14,
-                        controls: ['zoomControl']
-                    });
-
-                myMap.geoObjects.add(new ymaps.Placemark([longitude, latitude], {
-                    hintContent: name
-                    }, {
-                        preset: 'islands#circleDotIcon',
-                        iconColor: '#0095b6'
-                }));
-            });
         }
 
         function clickCancel(){
