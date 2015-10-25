@@ -8,58 +8,101 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=en" th:inline="javascript"></script>
+    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.indigo-pink.min.css"/>
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.5/material.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Restaurant</title>
 </head>
 <body>
-    <table id = "review_details_all_info">
-        <tr id="review_details_name">
-            <td><label>Restaurant:</label></td>
-            <td><label id = "restaurant_name"></label></td>
-        </tr>
-        <tr id="review_details_location">
-            <td colspan = "2"><div id="map" style="width: 300px; height: 200px"></div></td>
-        </tr>
-        <tr id="review_details_cuisine">
-            <td><label>Cuisine:</label></td>
-            <td><label id = "restaurant_cuisine"></label></td>
-        </tr>
-        <tr id="review_details_interior">
-            <td><label>Interior:</label></td>
-            <td><label id = "restaurant_interior"></label></td>
-        </tr>
-        <tr id="review_details_service">
-            <td><label>Service:</label></td>
-            <td><label id = "restaurant_service"></label></td>
-        </tr>
-        <tr id="review_details_review">
-            <td><label>Review:</label></td>
-            <td><label id = "restaurant_review"></label></td>
-        </tr>
-        <tr id="share_buttons">
-            <td><label>Share:</label></td>
-            <td class="social_share">
-                <a class="social_share_link" href="http://www.facebook.com/sharer.php?u=http://localhost:8080">Facebook</a>
-                <a class="social_share_link" href="http://www.vk.com/share.php?u=http://localhost:8080">VK</a>
-                <a class="social_share_link" href="https://plus.google.com/share?url=http://localhost:8080">Google+</a>
-            </td>
-        </tr>
-    </table>
-    <div id="back">
-        <p></p>
-        <button id="back_button" onclick = "clickBack()">Back</button>
-    </div>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+        <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" onclick="clickBack()">
+            <i class="fa fa-angle-left"></i>
+        </button>
+    </header>
+    <main class="mdl-layout__content">
+        <div class="page-content">
+            <table id = "review_details_all_info">
+                <tr id="review_details_name">
+                    <td ><label id = "restaurant_name"></label></td>
+                </tr>
+                <tr id="review_details_cuisine">
+                    <td><label>Cuisine:</label></td>
+                    <td id = "restaurant_cuisine">
+                        <i id = "restaurant_cuisine1" class="fa fa-trophy"></i>
+                        <i id = "restaurant_cuisine2" class="fa fa-trophy"></i>
+                        <i id = "restaurant_cuisine3" class="fa fa-trophy"></i>
+                        <i id = "restaurant_cuisine4" class="fa fa-trophy"></i>
+                        <i id = "restaurant_cuisine5" class="fa fa-trophy"></i>
+                    </td>
+                </tr>
+                <tr id="review_details_interior">
+                    <td><label>Interior:</label></td>
+                    <td id = "restaurant_interior">
+                        <i id = "restaurant_interior1" class="fa fa-trophy"></i>
+                        <i id = "restaurant_interior2" class="fa fa-trophy"></i>
+                        <i id = "restaurant_interior3" class="fa fa-trophy"></i>
+                        <i id = "restaurant_interior4" class="fa fa-trophy"></i>
+                        <i id = "restaurant_interior5" class="fa fa-trophy"></i>
+                    </td>
+                </tr>
+                <tr id="review_details_service">
+                    <td><label>Service:</label></td>
+                    <td id = "restaurant_service">
+                        <i id = "restaurant_service1" class="fa fa-trophy"></i>
+                        <i id = "restaurant_service2" class="fa fa-trophy"></i>
+                        <i id = "restaurant_service3" class="fa fa-trophy"></i>
+                        <i id = "restaurant_service4" class="fa fa-trophy"></i>
+                        <i id = "restaurant_service5" class="fa fa-trophy"></i>
+                    </td>
+                </tr>
+                <tr id="review_details_review">
+                    <td><label id = "restaurant_review"></label></td>
+                </tr>
+                <tr id="share_buttons">
+                    <td><label>Share:</label></td>
+                    <td class="social_share">
+                        <a class="social_share_link" href="http://www.facebook.com/sharer.php?u=http://localhost:8080"><i class="fa fa-facebook"></i></a>
+                        <a class="social_share_link" href="http://www.vk.com/share.php?u=http://localhost:8080"><i class="fa fa-google-plus"></i></a>
+                        <a class="social_share_link" href="https://plus.google.com/share?url=http://localhost:8080"><i class="fa fa-vk"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="review_details_location">
+                        <button id="map_button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick = "clickMap()">
+                            Show Location Details
+                        </button>
+                        <div id="map" style="width: 300px; height: 200px"></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </main>
+</div>
     <script th:inline="javascript">
         var restaurant = [[${reviewDetails}]]
 
         $(document).ready(function() {
+            $(".fa-trophy").hide();
+            $("#map").hide();
             $("#restaurant_name").text(restaurant.name);
-            $("#restaurant_cuisine").text(restaurant.cuisine);
-            $("#restaurant_interior").text(restaurant.interior);
-            $("#restaurant_service").text(restaurant.service);
+            addRating("restaurant_cuisine",restaurant.cuisine)
+            addRating("restaurant_interior",restaurant.interior);
+            addRating("restaurant_service",restaurant.service);
             $("#restaurant_review").text(restaurant.review);
             addLocation(restaurant);
             addSocialShareLinks();
         });
+
+        function addRating(locator, value){
+            var index = 1;
+            while(index!=value+1){
+                $("#"+locator+index).show();
+                index++;
+            }
+        }
 
         function addLocation(restaurant){
             ymaps.ready(function () {
@@ -67,7 +110,7 @@
                     myMap = new ymaps.Map('map', {
                         center: [restaurant.longitude, restaurant.latitude],
                         zoom: 14,
-                        controls: ['geolocationControl', 'zoomControl', 'searchControl', 'fullscreenControl']
+                        controls: ['fullscreenControl']
                     });
 
                 myMap.geoObjects.add(new ymaps.Placemark([restaurant.longitude, restaurant.latitude], {
@@ -89,6 +132,16 @@
 
         function clickBack(){
             window.location.replace("/");
+        }
+
+        function clickMap(){
+            if($("#map").is(":visible")){
+                $("#map").hide();
+                $("#map_button").html('Show Location Details')
+            }else{
+                $("#map").show();
+                $("#map_button").html('Hide Location Details')
+            }
         }
     </script>
 </body>
